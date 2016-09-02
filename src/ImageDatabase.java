@@ -50,4 +50,12 @@ public class ImageDatabase {
     public boolean isExtractingFeature() {
         return mIsExtractingFeatures;
     }
+    
+    public void setExtractFeature(boolean set){
+    	mIsExtractingFeatures = set;
+    }
+    
+    public void setExtractColor(boolean set){
+    	mIsExtractingFeatures = set;
+    }
 }

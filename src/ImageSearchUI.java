@@ -1,9 +1,21 @@
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
@@ -16,6 +28,13 @@ public class ImageSearchUI extends JFrame{
 	private FlowLayout topLayoutFL;
 	private GridLayout middleLayout;
 	private JFrame myFrame;
+	private String imagePath;
+	private Image browseImg;
+	private JLabel browseImageJL;
+	private ImageDatabase imageDB;
+	
+	private int width = 300; // the size for each image result
+	private int height = 300;
 	
 	
 	public ImageSearchUI(){
@@ -27,10 +46,11 @@ public class ImageSearchUI extends JFrame{
 		topJP = new JPanel();
 		middleJP = new JPanel();
 		
+		browseImageJL = new JLabel("");
 		
 		mainLayout = new BorderLayout();
 		topLayoutFL = new FlowLayout();
-		middleLayout = new GridLayout(1, 3);
+		middleLayout = new GridLayout(1, 4);
 		
 		histoColourJTB = new JToggleButton("Colour Histogram");
 		deepLearningJTB = new JToggleButton("Deep Learning");
@@ -38,7 +58,7 @@ public class ImageSearchUI extends JFrame{
 		
 		browseButton = new JButton("Browse");
 		
-		
+		imageDB = new ImageDatabase();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		init();
@@ -54,6 +74,8 @@ public class ImageSearchUI extends JFrame{
 		myFrame.add(topJP, BorderLayout.NORTH);
 		
 		topJP.add(browseButton);
+		topJP.add(browseImageJL);
+		
 		
 		middleJP.setLayout(middleLayout);
 		myFrame.add(middleJP, BorderLayout.CENTER);
@@ -62,7 +84,87 @@ public class ImageSearchUI extends JFrame{
 		middleJP.add(deepLearningJTB);
 		middleJP.add(bothJTB);
 		
+		//opens and loads an image when the browse button is pressed
+		browseButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setDialogTitle("Please select a sample image");
+				String path = "";
+				int returnVal =  fileChooser.showOpenDialog(ImageSearchUI.this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					imagePath = fileChooser.getSelectedFile().getAbsolutePath();
+					browseImg = null;
+					try {
+						browseImg = ImageIO.read(new File(imagePath));
+						
+						
+						browseImg = browseImg.getScaledInstance(width, -1, browseImg.SCALE_DEFAULT);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					browseImageJL.setIcon(new ImageIcon(browseImg));
+				}
+			}
+		});
 		
+		histoColourJTB.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				int state = e.getStateChange();
+				if(state== ItemEvent.SELECTED){
+					imageDB.setExtractColor(true);
+					System.out.println("Color Histogram is Selected");
+				}
+				else{
+					imageDB.setExtractColor(false);
+					System.out.println("Color Histogram is Not selected");
+				}
+			}
+		});
+		
+		deepLearningJTB.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				int state = e.getStateChange();
+				if(state== ItemEvent.SELECTED){
+					imageDB.setExtractFeature(true);
+					System.out.println("Deep learning is Selected");
+				}
+				else{
+					imageDB.setExtractFeature(false);
+					System.out.println("Deep learning is not selected");
+				}
+				
+			}
+		});
+		
+		bothJTB.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				int state = e.getStateChange();
+				if(state== ItemEvent.SELECTED){
+					histoColourJTB.setEnabled(false);
+					deepLearningJTB.setEnabled(false);
+					imageDB.setExtractFeature(true);
+					imageDB.setExtractColor(true);
+					System.out.println("both features are Selected");
+				}
+				else{
+					histoColourJTB.setEnabled(true);
+					deepLearningJTB.setEnabled(true);
+					imageDB.setExtractFeature(false);
+					imageDB.setExtractColor(false);
+					System.out.println("both features have been deselected");
+				}
+				
+			}
+		});
 		
 		myFrame.pack();
 		myFrame.setVisible(true);

@@ -58,4 +58,9 @@ public class ImageDatabase {
     public void setExtractColor(boolean set){
     	mIsExtractingFeatures = set;
     }
+    
+    public ArrayList getmImages(){
+		return mImages;
+    	
+    }
 }

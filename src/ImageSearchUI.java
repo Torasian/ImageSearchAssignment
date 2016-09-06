@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -22,18 +23,27 @@ import javax.swing.JToggleButton;
 
 public class ImageSearchUI extends JFrame{
 	
-	private JPanel topJP, middleJP, bottomJP;
+	private JPanel topSegment, middleSegment, bottomSegment;
+	
 	private JButton browseButton;
-	private JToggleButton histoColourJTB, deepLearningJTB, bothJTB;
-	private BorderLayout mainLayout;
-	private FlowLayout topLayoutFL, bottomLayoutFL;
-	private GridLayout middleLayout;
-	private JFrame myFrame;
-	private String imagePath;
-	private Image browseImg;
+	private JToggleButton histoColourJTB, deepLearnJTB, bothJTB;
 	private JLabel browseImageJL, imageJL;
+	
+	private BorderLayout mainLayoutBL;
+	private FlowLayout middleSegmentFL, bottomSegmentFL;
+	private BoxLayout topLayoutBL;
+	
+	private JFrame myFrame;
+	
+	private Image browseImg;
+	private String imagePath;
 	private ImageDatabase imageDB;
+	
+	private int imageWidth = 300; // the size for each image result
+	private int imageHeight = 300;
+
 	private ArrayList<JLabel> imageArrList;
+	
 	
 	
 	private int width = 300; // the size for each image result
@@ -45,30 +55,24 @@ public class ImageSearchUI extends JFrame{
 		myFrame = new JFrame("Image Search");
 		myFrame.setSize(1200, 600);
 		
+		topSegment = new JPanel(); middleSegment = new JPanel(); bottomSegment = new JPanel();
 		
-		topJP = new JPanel();
-		middleJP = new JPanel();
-		bottomJP = new JPanel();
+		mainLayoutBL = new BorderLayout();
+		
+		topLayoutBL = new BoxLayout(topSegment, BoxLayout.Y_AXIS);
+		middleSegmentFL = new FlowLayout();
+		bottomSegmentFL = new FlowLayout();
 		
 		browseImageJL = new JLabel("");
-		
-		mainLayout = new BorderLayout();
-		topLayoutFL = new FlowLayout();
-		middleLayout = new GridLayout(1, 4);
-		bottomLayoutFL = new FlowLayout();
-		
 		histoColourJTB = new JToggleButton("Colour Histogram");
-		deepLearningJTB = new JToggleButton("Deep Learning");
+		deepLearnJTB = new JToggleButton("Deep Learning");
 		bothJTB = new JToggleButton("Both");
-		
 		browseButton = new JButton("Browse");
-		
+	    
 		imageDB = new ImageDatabase();
-		imageArrList = new ArrayList<>();
-		
-		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
 		init();
 
 		
@@ -77,25 +81,27 @@ public class ImageSearchUI extends JFrame{
 	public void init(){
 		
 		
-		myFrame.setLayout(mainLayout);
-		topJP.setLayout(topLayoutFL);
-		myFrame.add(topJP, BorderLayout.NORTH);
+		myFrame.setLayout(mainLayoutBL);
+		topSegment.setLayout(topLayoutBL);
+		myFrame.add(topSegment, BorderLayout.NORTH);
 		
-		topJP.add(browseButton);
-		topJP.add(browseImageJL);
+		topSegment.add(browseButton);
+		browseButton.setAlignmentX(CENTER_ALIGNMENT);
+		topSegment.add(browseImageJL);
+		browseImageJL.setAlignmentX(CENTER_ALIGNMENT);
+		
+		middleSegment.setLayout(middleSegmentFL);
+		myFrame.add(middleSegment, BorderLayout.CENTER);
+	
+		middleSegment.add(histoColourJTB);
+		middleSegment.add(deepLearnJTB);
+		middleSegment.add(bothJTB);
+		
+		bottomSegment.setLayout(bottomSegmentFL);
+		myFrame.add(bottomSegment, BorderLayout.SOUTH);
 		
 		
-		
-		middleJP.setLayout(middleLayout);
-		myFrame.add(middleJP, BorderLayout.CENTER);
-		
-		
-		middleJP.add(histoColourJTB);
-		middleJP.add(deepLearningJTB);
-		middleJP.add(bothJTB);
-		
-		bottomJP.setLayout(bottomLayoutFL);
-		myFrame.add(bottomJP, BorderLayout.SOUTH);
+		repaint();
 		
 		for (int i = 0; i < imageDB.getmImages().size(); i++) {
 	
@@ -146,7 +152,7 @@ public class ImageSearchUI extends JFrame{
 			}
 		});
 		
-		deepLearningJTB.addItemListener(new ItemListener() {
+		deepLearnJTB.addItemListener(new ItemListener() {
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -170,14 +176,14 @@ public class ImageSearchUI extends JFrame{
 				int state = e.getStateChange();
 				if(state== ItemEvent.SELECTED){
 					histoColourJTB.setEnabled(false);
-					deepLearningJTB.setEnabled(false);
+					deepLearnJTB.setEnabled(false);
 					imageDB.setExtractFeature(true);
 					imageDB.setExtractColor(true);
 					System.out.println("both features are Selected");
 				}
 				else{
 					histoColourJTB.setEnabled(true);
-					deepLearningJTB.setEnabled(true);
+					deepLearnJTB.setEnabled(true);
 					imageDB.setExtractFeature(false);
 					imageDB.setExtractColor(false);
 					System.out.println("both features have been deselected");
@@ -193,6 +199,8 @@ public class ImageSearchUI extends JFrame{
 		
 		
 	}
+	
+	
 	
 	public static void main(String[] args){
 		ImageSearchUI demo = new ImageSearchUI();

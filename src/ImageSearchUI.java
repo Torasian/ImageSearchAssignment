@@ -103,11 +103,9 @@ public class ImageSearchUI extends JFrame{
 		
 		repaint();
 		
-		for (int i = 0; i < imageDB.getmImages().size(); i++) {
-	
+		for (int i = 0; i < imageDB.getImages().size(); i++) {
 			imageArrList.add(imageJL);
-			imageJL.setIcon(new ImageIcon((String) imageDB.getmImages().get(i)));
-			
+			imageJL.setIcon(new ImageIcon(imageDB.getImages().get(i).getFilePath()));
 		}
 		
 		//opens and loads an image when the browse button is pressed

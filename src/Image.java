@@ -8,10 +8,16 @@ public class Image implements Comparable<Image>{
     //TODO feature extraction ADT
     private Object mImageInformation;
     private ImageDatabase mImageDatabase;
+    private String mFilePath;
     
-    public Image(Object imageInformation, ImageDatabase imageDatabase) {
+    public Image(String filePath, Object imageInformation, ImageDatabase imageDatabase) {
         mImageInformation = imageInformation;
+        mFilePath = filePath;
         initialize();
+    }
+    
+    public String getFilePath() {
+        return mFilePath;
     }
     
     public void calculateSearchVector() {

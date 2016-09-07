@@ -40,7 +40,7 @@ public class ImageBean {
      * it calculates a search vector that can be compared
      * to another ImageBean's search vector
      */
-    public double calculateSimilarity(ImageBean query) {
+    public double calculateSimilarityg(ImageBean query) {
         if (mImageDatabase.isExtractingColor()) {
             
         }
@@ -57,6 +57,9 @@ public class ImageBean {
         extractColor();
     }
     
+    /**
+     * https://github.com/Clarifai/clarifai-java
+     */
     public void extractFeature() {
         mFeatureToProbMap.clear();
         ClarifaiClient clarifai = new ClarifaiClient(

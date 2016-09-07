@@ -26,8 +26,7 @@ public class Histogram  /*extends JFrame*/ {
 	//private Image img1;
 	//BufferedImage img1 = ImageIO.read(new File("/Users/Admin/Documents/NUS/Sem-1-2016-17/CS2108/Assignment/ImageSeach_demo/dataset/0042_461838579.jpg"));
 	
-	private int dim = 64;
-	
+	private int dim = 2;
 
 	
 	public Histogram() {
@@ -41,7 +40,7 @@ public class Histogram  /*extends JFrame*/ {
 		int imHeight = image.getHeight();
         int imWidth = image.getWidth();
         double[] bins = new double[dim*dim*dim];
-        int step = 256 / dim;
+        int step = 256 /dim;
         Raster raster = image.getRaster();
         for(int i = 0; i < imWidth; i++)
         {
@@ -62,7 +61,7 @@ public class Histogram  /*extends JFrame*/ {
         		int crbin = cr / step;
 
         		//Changed Codes. 
-                bins[ybin*dim*dim+cbbin*dim+crbin] ++;
+                bins[ybin*dim*dim+cbbin*dim+crbin]++;
             }
         }
         

@@ -5,42 +5,18 @@ import java.util.ArrayList;
  * Class used to store Image Information
  */
 public class ImageDatabase {
-    private ArrayList<Image> mImages;
+    private ArrayList<ImageBean> mImages;
     private boolean mIsExtractingColor;
     private boolean mIsExtractingFeatures;
     
-    public ImageDatabase() {
-        mImages = new ArrayList<>();
+    public ImageDatabase(ArrayList<ImageBean> images) {
+        initializeVariables();
     }
-
-    public boolean loadImages() {
-        boolean hasSucceeded = true;
-        
-        try {
-            
-        } catch (Exception e) {
-            hasSucceeded = false;
-        }
-        
-        return hasSucceeded;
-    }
-
-    private boolean loadImage(String path) {
-        boolean hasSucceeded = true;
-        
-        try {
-            
-        } catch (Exception e) {
-            hasSucceeded = false;
-        }
-        
-        return hasSucceeded;
-    }
-
+    
     /**
      * Searches for a list of similar images
      */
-    public ArrayList<Image> search(Image query) {
+    public ArrayList<ImageBean> search(ImageBean query) {
         return new ArrayList<>();
     }
     
@@ -53,15 +29,37 @@ public class ImageDatabase {
     }
     
     public void setExtractFeature(boolean set){
-    	mIsExtractingFeatures = set;
+        mIsExtractingFeatures = set;
     }
     
     public void setExtractColor(boolean set){
-    	mIsExtractingFeatures = set;
+        mIsExtractingFeatures = set;
     }
     
-    public ArrayList getmImages(){
-		return mImages;
-    	
+    public ArrayList<ImageBean> getImages() {
+        return new ArrayList<ImageBean>();
     }
+    
+    private void initializeVariables() {
+        mImages = new ArrayList<>();
+    }
+    
+//	private void loadBrowseImage() {
+//		JFileChooser fileChooser = new JFileChooser();
+//		fileChooser.setDialogTitle("Please select a sample image");
+//		String path = "";
+//		int returnVal =  fileChooser.showOpenDialog(ImageSearchUI.this);
+//		if (returnVal == JFileChooser.APPROVE_OPTION) {
+//			imagePath = fileChooser.getSelectedFile().getAbsolutePath();
+//			browseImg = null;
+//			try {
+//				browseImg = ImageIO.read(new File(imagePath));
+//				browseImg = browseImg.getScaledInstance(width, -1, browseImg.SCALE_DEFAULT);
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			browseImageJL.setIcon(new ImageIcon(browseImg));
+//		}
+//	}
 }

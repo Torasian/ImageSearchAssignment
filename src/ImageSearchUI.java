@@ -51,7 +51,7 @@ public class ImageSearchUI extends JFrame{
 	
 	
 	public ImageSearchUI(){
-		
+		Image.extractColor();
 		myFrame = new JFrame("Image Search");
 		myFrame.setSize(1200, 600);
 		

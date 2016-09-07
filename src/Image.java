@@ -37,6 +37,7 @@ public class Image implements Comparable<Image>{
     private void extractColor() {
         
     }
+   
     
     private ArrayList<Double> getSearchVector() {
         return new ArrayList<>();

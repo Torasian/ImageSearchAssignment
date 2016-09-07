@@ -28,6 +28,14 @@ public class ImageDatabase {
         return mIsExtractingFeatures;
     }
     
+    public void setExtractFeature(boolean set){
+        mIsExtractingFeatures = set;
+    }
+    
+    public void setExtractColor(boolean set){
+        mIsExtractingFeatures = set;
+    }
+    
     public ArrayList<Image> getImages() {
         return new ArrayList<>();
     }

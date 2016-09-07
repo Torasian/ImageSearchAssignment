@@ -103,35 +103,22 @@ public class ImageSearchUI extends JFrame{
 		
 		repaint();
 		
-		for (int i = 0; i < imageDB.getImages().size(); i++) {
-			imageArrList.add(imageJL);
-			imageJL.setIcon(new ImageIcon(imageDB.getImages().get(i).getFilePath()));
-		}
-		
+//		for (int i = 0; i < imageDB.getImages().size(); i++) {
+//	
+//			imageArrList.add(imageJL);
+//			imageJL.setIcon(new ImageIcon());
+//			
+//		}
+//		
 		//opens and loads an image when the browse button is pressed
 		browseButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setDialogTitle("Please select a sample image");
-				String path = "";
-				int returnVal =  fileChooser.showOpenDialog(ImageSearchUI.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					imagePath = fileChooser.getSelectedFile().getAbsolutePath();
-					browseImg = null;
-					try {
-						browseImg = ImageIO.read(new File(imagePath));
-						
-						
-						browseImg = browseImg.getScaledInstance(width, -1, browseImg.SCALE_DEFAULT);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					browseImageJL.setIcon(new ImageIcon(browseImg));
-				}
+				loadBrowseImage();
 			}
+
+		
 		});
 		
 		histoColourJTB.addItemListener(new ItemListener() {
@@ -204,5 +191,24 @@ public class ImageSearchUI extends JFrame{
 		ImageSearchUI demo = new ImageSearchUI();
 	}
 	
-	
+	private void loadBrowseImage() {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Please select a sample image");
+		String path = "";
+		int returnVal =  fileChooser.showOpenDialog(ImageSearchUI.this);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			imagePath = fileChooser.getSelectedFile().getAbsolutePath();
+			browseImg = null;
+			try {
+				browseImg = ImageIO.read(new File(imagePath));
+				
+				
+				browseImg = browseImg.getScaledInstance(width, -1, browseImg.SCALE_DEFAULT);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			browseImageJL.setIcon(new ImageIcon(browseImg));
+		}
+	}
 }

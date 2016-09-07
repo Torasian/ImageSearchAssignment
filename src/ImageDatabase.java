@@ -1,4 +1,10 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 
 /**
  * Class used to store Image Information
@@ -37,7 +43,7 @@ public class ImageDatabase {
     }
     
     public ArrayList<Image> getImages() {
-        return new ArrayList<>();
+        return new ArrayList<Image>();
     }
     
     private void initializeVariables() {
@@ -67,4 +73,26 @@ public class ImageDatabase {
         
         return hasSucceeded;
     }
+    
+//	private void loadBrowseImage() {
+//		JFileChooser fileChooser = new JFileChooser();
+//		fileChooser.setDialogTitle("Please select a sample image");
+//		String path = "";
+//		int returnVal =  fileChooser.showOpenDialog(ImageSearchUI.this);
+//		if (returnVal == JFileChooser.APPROVE_OPTION) {
+//			imagePath = fileChooser.getSelectedFile().getAbsolutePath();
+//			browseImg = null;
+//			try {
+//				browseImg = ImageIO.read(new File(imagePath));
+//				
+//				
+//				browseImg = browseImg.getScaledInstance(width, -1, browseImg.SCALE_DEFAULT);
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			browseImageJL.setIcon(new ImageIcon(browseImg));
+//		}
+	}
+    
 }

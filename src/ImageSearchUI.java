@@ -79,8 +79,6 @@ public class ImageSearchUI extends JFrame{
 	}
 	
 	public void init(){
-		
-		
 		myFrame.setLayout(mainLayoutBL);
 		topSegment.setLayout(topLayoutBL);
 		myFrame.add(topSegment, BorderLayout.NORTH);

@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.clarifai.api.ClarifaiClient;
@@ -12,7 +13,7 @@ import com.clarifai.api.Tag;
  */
 public class ImageBean implements Comparable<ImageBean>{
     //TODO color extraction ADT
-    //TODO feature extraction ADT
+    HashMap<String, Double> mFeatureToProbMap; 
     private Object mImageInformation;
     private ImageDatabase mImageDatabase;
     private String mFilePath;
@@ -20,6 +21,7 @@ public class ImageBean implements Comparable<ImageBean>{
     public ImageBean(String filePath, Object imageInformation, ImageDatabase imageDatabase) {
         mImageInformation = imageInformation;
         mFilePath = filePath;
+        mFeatureToProbMap = new HashMap<>();
         initialize();
     }
     
@@ -27,7 +29,13 @@ public class ImageBean implements Comparable<ImageBean>{
         return mFilePath;
     }
     
-    public void calculateSearchVector() {
+    /**
+     * Given the information for the image's color
+     * features and other extracted information,
+     * it calculates a search vector that can be compared
+     * to another ImageBean's search vector
+     */
+    public double calculateSimilarity(ImageBean query) {
         if (mImageDatabase.isExtractingColor()) {
             
         }
@@ -35,39 +43,34 @@ public class ImageBean implements Comparable<ImageBean>{
         if (mImageDatabase.isExtractingFeature()) {
             
         }
+        
+        return 0;
     }
     
     private void initialize() {
         extractFeature();
         extractColor();
-        calculateSearchVector();
     }
     
-    private void extractFeature() {
+    public void extractFeature() {
+        mFeatureToProbMap.clear();
         ClarifaiClient clarifai = new ClarifaiClient(
                 "fcq9IaGGv6G_Pm1yirdPapOa13pYpoamNDLOPX3s", 
                 "Xc9qLgll8bxQfr9J1oOsK4iqdf3WgcrkYQ2mzebG");
         
         List<RecognitionResult> results =
-            clarifai.recognize(new RecognitionRequest(new File("kittens.jpg")));
+            clarifai.recognize(new RecognitionRequest(new File(getFilePath())));
 
         for (Tag tag : results.get(0).getTags()) {
-          System.out.println(tag.getName() + ": " + tag.getProbability());
+            mFeatureToProbMap.put(tag.getName(), tag.getProbability());
         }
     }
     
     private void extractColor() {
         
     }
-   
     
     private ArrayList<Double> getSearchVector() {
         return new ArrayList<>();
-    }
-
-    @Override
-    public int compareTo(ImageBean o) {
-        // TODO Auto-generated method stub
-        return 0;
     }
 }

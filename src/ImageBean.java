@@ -11,7 +11,7 @@ import com.clarifai.api.Tag;
 /**
  * Class used to store the extracted information of one image
  */
-public class ImageBean implements Comparable<ImageBean>{
+public class ImageBean {
     //TODO color extraction ADT
     HashMap<String, Double> mFeatureToProbMap; 
     private Object mImageInformation;
@@ -35,7 +35,7 @@ public class ImageBean implements Comparable<ImageBean>{
      * it calculates a search vector that can be compared
      * to another ImageBean's search vector
      */
-    public double calculateSimilarity(ImageBean query) {
+    public double calculateSimilarityg(ImageBean query) {
         if (mImageDatabase.isExtractingColor()) {
             
         }
@@ -52,6 +52,9 @@ public class ImageBean implements Comparable<ImageBean>{
         extractColor();
     }
     
+    /**
+     * https://github.com/Clarifai/clarifai-java
+     */
     public void extractFeature() {
         mFeatureToProbMap.clear();
         ClarifaiClient clarifai = new ClarifaiClient(

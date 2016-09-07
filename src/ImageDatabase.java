@@ -1,10 +1,4 @@
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 
 /**
  * Class used to store Image Information
@@ -47,18 +41,6 @@ public class ImageDatabase {
     
     private void initializeVariables() {
         mImages = new ArrayList<>();
-    }
-
-    private boolean loadImage(String path) {
-        boolean hasSucceeded = true;
-        
-        try {
-            
-        } catch (Exception e) {
-            hasSucceeded = false;
-        }
-        
-        return hasSucceeded;
     }
     
 //	private void loadBrowseImage() {

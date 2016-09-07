@@ -9,10 +9,34 @@ public class ImageDatabase {
     private boolean mIsExtractingFeatures;
     
     public ImageDatabase() {
+        initializeVariables();
+        loadImages();
+    }
+    
+    /**
+     * Searches for a list of similar images
+     */
+    public ArrayList<Image> search(Image query) {
+        return new ArrayList<>();
+    }
+    
+    public boolean isExtractingColor() {
+        return mIsExtractingColor;
+    }
+    
+    public boolean isExtractingFeature() {
+        return mIsExtractingFeatures;
+    }
+    
+    public ArrayList<Image> getImages() {
+        return new ArrayList<>();
+    }
+    
+    private void initializeVariables() {
         mImages = new ArrayList<>();
     }
 
-    public boolean loadImages() {
+    private boolean loadImages() {
         boolean hasSucceeded = true;
         
         try {
@@ -34,20 +58,5 @@ public class ImageDatabase {
         }
         
         return hasSucceeded;
-    }
-
-    /**
-     * Searches for a list of similar images
-     */
-    public ArrayList<Image> search(Image query) {
-        return new ArrayList<>();
-    }
-    
-    public boolean isExtractingColor() {
-        return mIsExtractingColor;
-    }
-    
-    public boolean isExtractingFeature() {
-        return mIsExtractingFeatures;
     }
 }

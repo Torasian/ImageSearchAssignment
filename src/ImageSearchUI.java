@@ -69,7 +69,7 @@ public class ImageSearchUI extends JFrame{
 		bothJTB = new JToggleButton("Both");
 		browseButton = new JButton("Browse");
 	    
-		imageDB = new ImageDatabase();
+		imageDB = new ImageDatabase(new ArrayList<ImageBean>());
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	

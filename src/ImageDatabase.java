@@ -4,18 +4,18 @@ import java.util.ArrayList;
  * Class used to store Image Information
  */
 public class ImageDatabase {
-    private ArrayList<Image> mImages;
+    private ArrayList<ImageBean> mImages;
     private boolean mIsExtractingColor;
     private boolean mIsExtractingFeatures;
     
-    public ImageDatabase(ArrayList<Image> images) {
+    public ImageDatabase(ArrayList<ImageBean> images) {
         initializeVariables();
     }
     
     /**
      * Searches for a list of similar images
      */
-    public ArrayList<Image> search(Image query) {
+    public ArrayList<ImageBean> search(ImageBean query) {
         return new ArrayList<>();
     }
     
@@ -35,8 +35,8 @@ public class ImageDatabase {
         mIsExtractingFeatures = set;
     }
     
-    public ArrayList<Image> getImages() {
-        return new ArrayList<Image>();
+    public ArrayList<ImageBean> getImages() {
+        return new ArrayList<ImageBean>();
     }
     
     private void initializeVariables() {

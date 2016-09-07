@@ -117,8 +117,6 @@ public class ImageSearchUI extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				loadBrowseImage();
 			}
-
-		
 		});
 		
 		histoColourJTB.addItemListener(new ItemListener() {

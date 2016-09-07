@@ -14,9 +14,8 @@ public class ImageDatabase {
     private boolean mIsExtractingColor;
     private boolean mIsExtractingFeatures;
     
-    public ImageDatabase() {
+    public ImageDatabase(ArrayList<Image> images) {
         initializeVariables();
-        loadImages();
     }
     
     /**
@@ -50,18 +49,6 @@ public class ImageDatabase {
         mImages = new ArrayList<>();
     }
 
-    private boolean loadImages() {
-        boolean hasSucceeded = true;
-        
-        try {
-            
-        } catch (Exception e) {
-            hasSucceeded = false;
-        }
-        
-        return hasSucceeded;
-    }
-
     private boolean loadImage(String path) {
         boolean hasSucceeded = true;
         
@@ -84,8 +71,6 @@ public class ImageDatabase {
 //			browseImg = null;
 //			try {
 //				browseImg = ImageIO.read(new File(imagePath));
-//				
-//				
 //				browseImg = browseImg.getScaledInstance(width, -1, browseImg.SCALE_DEFAULT);
 //			} catch (IOException e1) {
 //				// TODO Auto-generated catch block
@@ -93,6 +78,5 @@ public class ImageDatabase {
 //			}
 //			browseImageJL.setIcon(new ImageIcon(browseImg));
 //		}
-	}
-    
+//	}
 }

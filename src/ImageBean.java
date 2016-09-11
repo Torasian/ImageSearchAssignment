@@ -82,19 +82,6 @@ public class ImageBean {
         extractText();
     }
     
-    private double compareFeature(ImageBean query) {
-        double similarity = 0;
-        Map<String, Double> map = query.getFeatureMap();
-        for (String object : map.keySet()) {
-            if (mFeatureToProbMap.containsKey(object)) {
-                double currentProb = mFeatureToProbMap.get(object);
-                double queryProb = map.get(object);
-                similarity += Math.min(currentProb, queryProb);
-            }
-        }
-        return similarity;
-    }
-    
     /**
      * https://github.com/Clarifai/clarifai-java
      */
@@ -133,6 +120,19 @@ public class ImageBean {
     	} catch (IOException e) {
     		
     	}
+    }
+    
+    private double compareFeature(ImageBean query) {
+        double similarity = 0;
+        Map<String, Double> map = query.getFeatureMap();
+        for (String object : map.keySet()) {
+            if (mFeatureToProbMap.containsKey(object)) {
+                double currentProb = mFeatureToProbMap.get(object);
+                double queryProb = map.get(object);
+                similarity += Math.min(currentProb, queryProb);
+            }
+        }
+        return similarity;
     }
   
     private ArrayList<Double> getSearchVector() {

@@ -181,7 +181,7 @@ public class SearchUI extends JFrame{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				imageDB.setExtractColor(true);
+				loadBrowseImage();
 			}
 		});
 	}
@@ -198,18 +198,12 @@ public class SearchUI extends JFrame{
 				browseImg = ImageIO.read(new File(imagePath));
 
 
-
-				
-				System.out.println(images.getFilePath());
-
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			browseJL.setIcon(new ImageIcon(browseImg));
-			revalidate();
-			repaint();
 		}
 	}
 

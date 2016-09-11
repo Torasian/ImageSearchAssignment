@@ -1,9 +1,16 @@
+import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 
@@ -11,21 +18,23 @@ import com.clarifai.api.ClarifaiClient;
 import com.clarifai.api.RecognitionRequest;
 import com.clarifai.api.RecognitionResult;
 import com.clarifai.api.Tag;
+import com.sun.xml.internal.ws.util.StringUtils;
 
 /**
  * Class used to store the extracted information of one image
  */
 public class ImageBean {
-    //TODO color extraction ADT
-    HashMap<String, Double> mFeatureToProbMap; 
+    private Map<String, Double> mFeatureToProbMap; 
     private Object mImageInformation;
     private ImageDatabase mImageDatabase;
     private String mFilePath;
+    private String mFileName;
     private static Histogram hist;
     
-    public ImageBean(String filePath, Object imageInformation, ImageDatabase imageDatabase) {
+    public ImageBean(String fileName, String filePath, Object imageInformation, ImageDatabase imageDatabase) {
         mImageInformation = imageInformation;
         mFilePath = filePath;
+        mFileName = fileName;
         mFeatureToProbMap = new HashMap<>();
         initialize();
     }
@@ -34,13 +43,17 @@ public class ImageBean {
         return mFilePath;
     }
     
+    public String getFileName() {
+        return mFileName;
+    }
+    
     /**
      * Given the information for the image's color
      * features and other extracted information,
      * it calculates a search vector that can be compared
      * to another ImageBean's search vector
      */
-    public double calculateSimilarityg(ImageBean query) {
+    public double calculateSimilarity(ImageBean query) {
         if (mImageDatabase.isExtractingColor()) {
             
         }
@@ -49,12 +62,17 @@ public class ImageBean {
             
         }
         
+        if (mImageDatabase.isExtractingText()) {
+            
+        }
+        
         return 0;
     }
     
     private void initialize() {
-        extractFeature();
+        //extractFeature();
         extractColor();
+        extractText();
     }
     
     /**
@@ -62,15 +80,28 @@ public class ImageBean {
      */
     public void extractFeature() {
         mFeatureToProbMap.clear();
+        Map<String, Double> mFeatureToProbMap = new HashMap<>();
         ClarifaiClient clarifai = new ClarifaiClient(
                 "fcq9IaGGv6G_Pm1yirdPapOa13pYpoamNDLOPX3s", 
                 "Xc9qLgll8bxQfr9J1oOsK4iqdf3WgcrkYQ2mzebG");
         
-        List<RecognitionResult> results =
+        List<RecognitionResult> results = 
             clarifai.recognize(new RecognitionRequest(new File(getFilePath())));
 
         for (Tag tag : results.get(0).getTags()) {
             mFeatureToProbMap.put(tag.getName(), tag.getProbability());
+        }
+    }
+    
+    public static void extractText() {
+        Path testPath = getTestPath("train_text_tags.txt");
+        try {
+            List<String> lines = Files.readAllLines(testPath, Charset.defaultCharset());
+            for (String line : lines) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     
@@ -87,8 +118,16 @@ public class ImageBean {
     		
     	}
     }
-    
+  
     private ArrayList<Double> getSearchVector() {
         return new ArrayList<>();
+    }
+    
+    private static Path getTestPath(String fileName) {
+        Path currentRelativePath = Paths.get("").getParent().resolve("ImageData").resolve("train");
+        if (fileName != null && !fileName.isEmpty()) {
+            currentRelativePath.resolve(fileName);
+        }
+        return currentRelativePath;
     }
 }

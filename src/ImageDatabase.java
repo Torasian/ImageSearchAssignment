@@ -7,7 +7,8 @@ import java.util.ArrayList;
 public class ImageDatabase {
     private ArrayList<ImageBean> mImages;
     private boolean mIsExtractingColor;
-    private boolean mIsExtractingFeatures;
+    private boolean mIsExtractingFeature;
+    private boolean mIsExtractingText;
     
     public ImageDatabase(ArrayList<ImageBean> images) {
         initializeVariables();
@@ -25,15 +26,23 @@ public class ImageDatabase {
     }
     
     public boolean isExtractingFeature() {
-        return mIsExtractingFeatures;
+        return mIsExtractingFeature;
     }
     
-    public void setExtractFeature(boolean set){
-        mIsExtractingFeatures = set;
+    public boolean isExtractingText() {
+        return mIsExtractingText;
     }
     
-    public void setExtractColor(boolean set){
-        mIsExtractingFeatures = set;
+    public void setExtractFeature(boolean isExtractingFeature){
+        mIsExtractingFeature = isExtractingFeature;
+    }
+    
+    public void setExtractColor(boolean isExtractingFeature){
+        mIsExtractingFeature = isExtractingFeature;
+    }
+    
+    public void setExtractingText(boolean isExtractingText) {
+        mIsExtractingText = isExtractingText;
     }
     
     public ArrayList<ImageBean> getImages() {

@@ -49,10 +49,10 @@ public class SearchUI extends JFrame{
 	private Image browseImg, img;
 	private ImageDatabase imageDB;
 	private int imageWidth = 300;
+	private ArrayList<ImageBean> imageBeans = new ArrayList<>();
 	private ImageBean images;
 	private  ArrayList<String> imagePaths = new ArrayList<>();
 	private int spc_count=-1;
-
 
 	public SearchUI(){
 
@@ -65,8 +65,9 @@ public class SearchUI extends JFrame{
 		deepJTB = new JToggleButton("Deep Learning");
 		bothJTB = new JToggleButton("Both");
 		loadAllJB = new JButton("Load All");
-
-
+		
+		imageDB = new ImageDatabase(imageBeans);
+		
 		imagesJP = new JPanel(new WrapLayout());
 		scrollJSP = new JScrollPane(imagesJP);
 
@@ -104,9 +105,14 @@ public class SearchUI extends JFrame{
 
 		this.pack();
 		this.setVisible(true);
+		
+		
 
 	}
 
+	/**
+	 * Creates an item listener event for when the histoColourJTB is selected
+	 */
 	private void histoColourJTBAction() {
 		histoJTB.addItemListener(new ItemListener() {
 
@@ -115,6 +121,7 @@ public class SearchUI extends JFrame{
 				int state = e.getStateChange();
 				if(state== ItemEvent.SELECTED){
 					imageDB.setExtractColor(true);
+					System.out.println("Color Histogram selected");
 				}
 				else{
 					imageDB.setExtractColor(false);
@@ -174,8 +181,7 @@ public class SearchUI extends JFrame{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				loadBrowseImage();
-
+				imageDB.setExtractColor(true);
 			}
 		});
 	}
@@ -233,7 +239,12 @@ public class SearchUI extends JFrame{
 		for (int i = 0; i < spc_count; i++)
 			spcs += " ";
 
+		iterateFiles(spcs);
+		scrollJSP.setVisible(true);
+		printPictures();
+	}
 
+	private void iterateFiles(String spcs) {
 		if(dir.isFile()){
 			for(final String ext : EXTENSIONS){
 				if(dir.getName().endsWith("."+ ext)){
@@ -259,10 +270,6 @@ public class SearchUI extends JFrame{
 			}
 		}
 		spc_count--;
-
-		
-		scrollJSP.setVisible(true);
-		printPictures();
 	}
 
 

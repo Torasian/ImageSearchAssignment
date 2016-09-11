@@ -1,12 +1,15 @@
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,8 @@ public class ImageBean {
     private Map<String, Double> mFeatureToProbMap; 
     private Object mImageInformation;
     private ImageDatabase mImageDatabase;
+    private static String[] tags;
+    private static ArrayList<Integer> intTags = new ArrayList<>();
     private String mFilePath;
     private String mFileName;
     private static Histogram hist;
@@ -106,7 +111,50 @@ public class ImageBean {
     public static void extractText() {
         Path trainPath = getTestPath("train_text_tags.txt");
         Path testPath = getTestPath("../test/train_text_tags.txt");
+        String path = "/Users/WSH/Desktop/train_text_tags.txt";
+        
+        FileReader input = null;
+        BufferedReader br = null;
+        
+        
+
+        try {
+
+            input = new FileReader(path);
+            br = new BufferedReader(input);
+            String str;
+
+            while ((str = br.readLine()) != null) {
+            	tags = str.split(" ");
+                System.out.println(str);
+            }
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        finally {
+
+            try {
+                input.close();
+                br.close();
+            }
+
+            catch (IOException x) {
+                x.printStackTrace();
+            }
+
+        }
+        Arrays.sort(tags);
+        
+       
     }
+        
+        
+        
+        
+    
     
     public static void extractColor() {
     	double histvalue[];

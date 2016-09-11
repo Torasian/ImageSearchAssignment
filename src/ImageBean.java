@@ -122,6 +122,17 @@ public class ImageBean {
     	}
     }
     
+    /**
+     * mFeatureToProbMap    = { "dog": 0.95, "cat": 0.4, "sky": 0.9 }
+     * query.getFeatureMap  = { "dog": 0.94, "baby": 0.3, "sky": 0.85 }
+     * similarity = min(0.95, 0.94) = 0.94
+     * 
+     * explanation:
+     * dog appears in both, take the smallest probability (include)
+     * cat doesn't appear in both and has probability < 90 (exclude)
+     * baby doesn't appear in both and has probability < 90 (exclude)
+     * sky appears in both, but one of the probability < 90 (exclude)
+     */
     private double compareFeature(ImageBean query) {
         double similarity = 0;
         Map<String, Double> map = query.getFeatureMap();

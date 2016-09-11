@@ -45,11 +45,8 @@ public class ImageBean {
      */
     public double calculateSimilarityg(ImageBean query) {
         if (mImageDatabase.isExtractingColor()) {
-        	String imagePath = query.mFilePath;
-        	query.extractColor(imagePath);
-        	
-        	
-        	try{
+     	
+        	/*try{
         		BufferedImage img1 = ImageIO.read(new File("/Users/Admin/Documents/NUS/Sem-1-2016-17/CS2108/Assignment/ImageSeach_demo/dataset/0028_1070815604.jpg"));
         		BufferedImage img2 = ImageIO.read(new File("/Users/Admin/Documents/NUS/Sem-1-2016-17/CS2108/Assignment/ImageSeach_demo/dataset/0030_1091560018.jpg"));
         		histogram1 = new Histogram();
@@ -65,7 +62,7 @@ public class ImageBean {
         		}
         		catch (IOException e) {
             		
-            	}
+            	}*/
         }
         
         if (mImageDatabase.isExtractingFeature()) {
@@ -77,7 +74,7 @@ public class ImageBean {
     
     private void initialize() {
         extractFeature();
-        extractColor(String imagePath);
+        extractColor();
     }
     
     /**
@@ -97,13 +94,13 @@ public class ImageBean {
         }
     }
     
-    public static void extractColor(String ImagePath) {
+    public static void extractColor() {
  
     	
     	//double histvalue[];
     	try {
-    		//BufferedImage img1 = ImageIO.read(new File("/Users/Admin/Documents/NUS/Sem-1-2016-17/CS2108/Assignment/ImageSeach_demo/dataset/0028_1070815604.jpg"));
-        	BufferedImage img = ImageIO.read(new File(ImagePath));
+    		BufferedImage img1 = ImageIO.read(new File("/Users/Admin/Documents/NUS/Sem-1-2016-17/CS2108/Assignment/ImageSeach_demo/dataset/0028_1070815604.jpg"));
+        	//BufferedImage img = ImageIO.read(new File(ImagePath));
     		
     		hist = new Histogram();
             double [] histvalue = hist.getHist(img1);
@@ -116,7 +113,7 @@ public class ImageBean {
     }
     
     
-    /*public static void ColourHistSimilarityCal(){
+    public static void ColourHistSimilarityCal(){
     	
     		try{
     		BufferedImage img1 = ImageIO.read(new File("/Users/Admin/Documents/NUS/Sem-1-2016-17/CS2108/Assignment/ImageSeach_demo/dataset/0028_1070815604.jpg"));
@@ -135,7 +132,7 @@ public class ImageBean {
     		catch (IOException e) {
         		
         	}
-    }*/
+    }
     
     private ArrayList<Double> getSearchVector() {
         return new ArrayList<>();

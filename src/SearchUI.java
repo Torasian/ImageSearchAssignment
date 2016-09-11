@@ -53,6 +53,7 @@ public class SearchUI extends JFrame{
 	    
 	    
 	    public SearchUI(){
+	        ImageBean.extractText();
 	    	
 	    	browseJB = new JButton("Browse:");
 	    	browseJL = new JLabel("");

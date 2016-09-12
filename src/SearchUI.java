@@ -116,6 +116,7 @@ public class SearchUI extends JFrame{
 	 * Creates an item listener event for when the histoColourJTB is selected
 	 */
 	private void histoColourJTBAction() {
+		ImageBean.extractColor();
 		histoJTB.addItemListener(new ItemListener() {
 
 			@Override

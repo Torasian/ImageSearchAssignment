@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -196,8 +198,10 @@ public class SearchUI extends JFrame{
 			browseImg = null;
 			try {
 				browseImg = ImageIO.read(new File(imagePath));
-
-
+				
+				Path p = Paths.get(imagePath);
+				String file = p.getFileName().toString();
+				images = new ImageBean(file, imagePath, browseImg, imageDB);
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -247,6 +251,12 @@ public class SearchUI extends JFrame{
 					try{
 						img = ImageIO.read(dir);
 						loadedImages.add(img);
+						for (int i = 0; i< imagePaths.size(); i++) {
+							String imageP = imagePaths.get(i);
+							Path p = Paths.get(imageP);
+							String file = p.getFileName().toString();
+							images = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
+						}
 					} catch (final IOException e){
 						
 					}
@@ -308,7 +318,9 @@ public class SearchUI extends JFrame{
 
 	}
 
-
+	private void extarctFileName(){
+		
+	}
 
 
 	public static void main(String[] args){

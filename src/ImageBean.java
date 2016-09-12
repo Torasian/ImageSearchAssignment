@@ -1,3 +1,4 @@
+import java.awt.Image;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -30,7 +31,7 @@ import com.sun.xml.internal.ws.util.StringUtils;
 public class ImageBean {
     private static double MINIMUM_PROB = 0.90;
     private Map<String, Double> mFeatureToProbMap; 
-    private Object mImageInformation;
+    private Image mImageInformation;
     private ImageDatabase mImageDatabase;
     private static String[] tags;
     private static ArrayList<Integer> intTags = new ArrayList<>();
@@ -38,7 +39,7 @@ public class ImageBean {
     private String mFileName;
     private static Histogram hist;
     
-    public ImageBean(String fileName, String filePath, Object imageInformation, ImageDatabase imageDatabase) {
+    public ImageBean(String fileName, String filePath, Image imageInformation, ImageDatabase imageDatabase) {
         mImageInformation = imageInformation;
         mFilePath = filePath;
         mFileName = fileName;
@@ -84,7 +85,7 @@ public class ImageBean {
     private void initialize() {
         //extractFeature();
         extractColor();
-        extractText();
+//        extractText();
     }
     
     /**
@@ -111,7 +112,7 @@ public class ImageBean {
     public static void extractText() {
         Path trainPath = getTestPath("train_text_tags.txt");
         Path testPath = getTestPath("../test/train_text_tags.txt");
-        String path = "/Users/WSH/Desktop/train_text_tags.txt";
+        String path = testPath.toString();
         
         FileReader input = null;
         BufferedReader br = null;

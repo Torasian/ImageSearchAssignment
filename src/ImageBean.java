@@ -85,7 +85,7 @@ public class ImageBean {
     private void initialize() {
         //extractFeature();
         extractColor();
-//        extractText();
+        extractText();
     }
     
     /**
@@ -112,7 +112,7 @@ public class ImageBean {
     public static void extractText() {
         Path trainPath = getTestPath("train_text_tags.txt");
         Path testPath = getTestPath("../test/train_text_tags.txt");
-        String path = testPath.toString();
+        String path = "/Users/WSH/Desktop/test_text_tags_copy.txt";
         
         FileReader input = null;
         BufferedReader br = null;

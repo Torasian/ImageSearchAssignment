@@ -145,6 +145,8 @@ public class ImageBean {
         }
         return similarity;
     }
+    
+    
   
     private ArrayList<Double> getSearchVector() {
         return new ArrayList<>();

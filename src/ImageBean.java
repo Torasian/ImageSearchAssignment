@@ -26,7 +26,7 @@ public class ImageBean {
     private Map<String, Double> mFeatureToProbMap; 
     private Image mImageInformation;
     private ImageDatabase mImageDatabase;
-    private static String[] tags;
+    private static ArrayList<String> tags;
     private static ArrayList<Integer> intTags = new ArrayList<>();
     private String mFilePath;
     private String mFileName;
@@ -103,22 +103,7 @@ public class ImageBean {
     }
     
     public static void extractText() {
-        Path trainPath = Utils.getTestPath("train_text_tags.txt");
-        Path testPath = Utils.getTestPath("../test/train_text_tags.txt");
-        //String path = "/Users/WSH/Desktop/test_text_tags_copy.txt";
-        String path = trainPath.toString();
-
-        try (FileReader input = new FileReader(path); BufferedReader br = new BufferedReader(input)) {
-            String str;
-
-            while ((str = br.readLine()) != null) {
-            	tags = str.split(" ");
-                System.out.println(str);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Arrays.sort(tags);
+        
     }
     
     public static void extractColor() {

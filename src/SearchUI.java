@@ -218,7 +218,7 @@ public class SearchUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					loadAllImages("/Users/WSH/Desktop/test_images");
+					loadAllImages(Utils.getTestPath("data").toString());
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -228,8 +228,7 @@ public class SearchUI extends JFrame{
 	}
 
 	private void loadAllImages(String path) throws IOException{
-
-
+	    imagePaths.clear();
 		dir = new File(path);
 		System.out.println(path);
 
@@ -316,7 +315,6 @@ public class SearchUI extends JFrame{
 			revalidate();
 			repaint();
 		}
-
 	}
 
 	private void extarctFileName(){

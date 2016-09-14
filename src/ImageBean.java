@@ -1,21 +1,15 @@
 import java.awt.Image;
-import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 
@@ -23,7 +17,6 @@ import com.clarifai.api.ClarifaiClient;
 import com.clarifai.api.RecognitionRequest;
 import com.clarifai.api.RecognitionResult;
 import com.clarifai.api.Tag;
-import com.sun.xml.internal.ws.util.StringUtils;
 
 /**
  * Class used to store the extracted information of one image
@@ -110,52 +103,23 @@ public class ImageBean {
     }
     
     public static void extractText() {
-        Path trainPath = getTestPath("train_text_tags.txt");
-        Path testPath = getTestPath("../test/train_text_tags.txt");
-        String path = "/Users/WSH/Desktop/test_text_tags_copy.txt";
-        
-        FileReader input = null;
-        BufferedReader br = null;
-        
-        
+        Path trainPath = Utils.getTestPath("train_text_tags.txt");
+        Path testPath = Utils.getTestPath("../test/train_text_tags.txt");
+        //String path = "/Users/WSH/Desktop/test_text_tags_copy.txt";
+        String path = trainPath.toString();
 
-        try {
-
-            input = new FileReader(path);
-            br = new BufferedReader(input);
+        try (FileReader input = new FileReader(path); BufferedReader br = new BufferedReader(input)) {
             String str;
 
             while ((str = br.readLine()) != null) {
             	tags = str.split(" ");
                 System.out.println(str);
             }
-        }
-
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        finally {
-
-            try {
-                input.close();
-                br.close();
-            }
-
-            catch (IOException x) {
-                x.printStackTrace();
-            }
-
-        }
         Arrays.sort(tags);
-        
-       
     }
-        
-        
-        
-        
-    
     
     public static void extractColor() {
     	double histvalue[];
@@ -193,22 +157,5 @@ public class ImageBean {
             }
         }
         return similarity;
-    }
-    
-    
-  
-    private ArrayList<Double> getSearchVector() {
-        return new ArrayList<>();
-    }
-    
-    private static Path getTestPath(String fileName) {
-        Path currentRelativePath = Paths.get("").toAbsolutePath();
-        currentRelativePath = currentRelativePath.getParent();
-        currentRelativePath = currentRelativePath.resolve("ImageData");
-        currentRelativePath = currentRelativePath.resolve("train");
-        if (fileName != null && !fileName.isEmpty()) {
-            currentRelativePath = currentRelativePath.resolve(fileName);
-        }
-        return currentRelativePath;
     }
 }

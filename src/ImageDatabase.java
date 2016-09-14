@@ -69,6 +69,31 @@ public class ImageDatabase {
         allWords = getAllWords(fileToListMap);
     }
     
+    public ArrayList<String> getTagsForFilename(String filename){
+    	if(!fileToListMap.containsKey(filename)){
+    		return new ArrayList<>();
+    	}
+    	return fileToListMap.get(filename);
+    }
+    
+    public ArrayList<Integer> getVectorForTags(ArrayList<String> fileTags, ArrayList<String> allWords){
+    	ArrayList<Integer> tagMatches = new ArrayList<>();
+    	
+    	int j= 0;
+    	
+    	for (int i = 0; i < allWords.size(); i++) {
+			if (allWords.get(i).equals(fileTags.get(j))) {
+				tagMatches.add(i);
+				j++;
+			} else {
+				tagMatches.add(0);
+			}
+			
+		}
+    	
+    	return tagMatches;
+    }
+    
     public Map<String, ArrayList<String>> getFileToTagListMap(String path) {
         Map<String, ArrayList<String>> fileToTagsMap = new HashMap<>();
 

@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.imageio.ImageIO;
 
 import com.clarifai.api.ClarifaiClient;
@@ -26,8 +25,8 @@ public class ImageBean {
     private Map<String, Double> mFeatureToProbMap; 
     private Image mImageInformation;
     private ImageDatabase mImageDatabase;
-    private static ArrayList<String> tags;
-    private static ArrayList<Integer> intTags = new ArrayList<>();
+    private ArrayList<String> tags;
+    private ArrayList<Integer> intTags = new ArrayList<>();
     private String mFilePath;
     private String mFileName;
     private static Histogram hist;
@@ -102,8 +101,13 @@ public class ImageBean {
         }
     }
     
-    public static void extractText() {
-        
+    public void extractText() {
+//    	tags = mImageDatabase.getTagsForFilename(mFileName);
+//    	Map<String, ArrayList<String>> getFiletoTagList = mImageDatabase.getFileToTagListMap(mFilePath);
+// 
+//    	ArrayList<String> allWords = mImageDatabase.getAllWords(getFiletoTagList);
+//    	intTags = mImageDatabase.getVectorForTags(tags, allWords);
+    	
     }
     
     public static void extractColor() {

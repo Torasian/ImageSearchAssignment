@@ -116,11 +116,11 @@ public class ImageDatabase {
                 }
                 ArrayList<String> tagsForFile = new ArrayList<>(tagSet);
                 Collections.sort(tagsForFile);
-                System.out.println(fileName);
-                found = found || "0037_61248472.jpg".equals(fileName);
+//                System.out.println(fileName);
+//                found = found || "0037_61248472.jpg".equals(fileName);
                 fileToTagsMap.put(fileName, tagsForFile);
             }
-            System.out.println(found);
+//            System.out.println(found);
         } catch (IOException e) {
             e.printStackTrace();
         }

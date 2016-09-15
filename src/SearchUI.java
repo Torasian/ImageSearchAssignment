@@ -105,9 +105,9 @@ public class SearchUI extends JFrame{
 		loadAllAction();
 		browseButtonAction();
 		bothJTBAction();
-		deepLearningJTBAction();
+		
 		histoColourJTBAction();
-		textJTBAction();
+		
 
 		this.pack();
 		this.setVisible(true);
@@ -163,7 +163,7 @@ public class SearchUI extends JFrame{
 		});
 	}
 
-	private void deepLearningJTBAction() {
+	private void deepLearningJTBAction(ImageBean query) {
 		deepJTB.addItemListener(new ItemListener() {
 
 			@Override
@@ -186,7 +186,7 @@ public class SearchUI extends JFrame{
 		});
 	}
 	
-	private void textJTBAction() {
+	private void textJTBAction(ImageBean query) {
 		textJTB.addItemListener(new ItemListener() {
 			
 			@Override
@@ -194,6 +194,7 @@ public class SearchUI extends JFrame{
 				int state = e.getStateChange();
 				if(state == ItemEvent.SELECTED){
 					imageDB.setExtractingText(true);
+					System.out.println(imageDB.getSimilarImages(query));
 					imageDB.getSimilarImages(query);
 					printPictures(imageDB.getSimilarImages(query));
 					System.out.println("Text Extraction is selected");
@@ -232,9 +233,11 @@ public class SearchUI extends JFrame{
 				
 				Path p = Paths.get(imagePath);
 				String file = p.getFileName().toString();
-				ImageBean query = new ImageBean(file, imagePath, browseImg, imageDB);
+				query = new ImageBean(file, imagePath, browseImg, imageDB);
 				ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
 				
+				textJTBAction(query);
+				deepLearningJTBAction(query);
 				
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
 			} catch (IOException e1) {

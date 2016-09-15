@@ -63,7 +63,7 @@ public class ImageBean {
     public void calculateSimilarity(ImageBean query) {
         double similarityValue = 0;
         if (mImageDatabase.isExtractingColor()) {
-            similarityValue += compareText(query);
+            
         }
         
         if (mImageDatabase.isExtractingFeature()) {
@@ -71,7 +71,7 @@ public class ImageBean {
         }
         
         if (mImageDatabase.isExtractingText()) {
-            
+        	similarityValue += compareText(query);
         }
         
         this.simValue = similarityValue;

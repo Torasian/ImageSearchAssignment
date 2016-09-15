@@ -35,6 +35,7 @@ public class ImageBean {
         mImageInformation = imageInformation;
         mFilePath = filePath;
         mFileName = fileName;
+        mImageDatabase = imageDatabase;
         mFeatureToProbMap = new HashMap<>();
         initialize();
     }
@@ -71,7 +72,7 @@ public class ImageBean {
             
         }
         
-        return 0;
+        return similarityValue;
     }
     
     private void initialize() {
@@ -102,11 +103,11 @@ public class ImageBean {
     }
     
     public void extractText() {
-//    	tags = mImageDatabase.getTagsForFilename(mFileName);
-//    	Map<String, ArrayList<String>> getFiletoTagList = mImageDatabase.getFileToTagListMap(mFilePath);
-// 
-//    	ArrayList<String> allWords = mImageDatabase.getAllWords(getFiletoTagList);
-//    	intTags = mImageDatabase.getVectorForTags(tags, allWords);
+    	tags = mImageDatabase.getTagsForFileName(mFileName);
+    	Map<String, ArrayList<String>> getFiletoTagList = mImageDatabase.getFileToTagListMap();
+
+    	ArrayList<String> allWords = mImageDatabase.getAllWords(getFiletoTagList);
+    	intTags = mImageDatabase.getVectorForTags(tags, allWords);
     	
     }
     

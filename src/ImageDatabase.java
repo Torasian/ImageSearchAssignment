@@ -62,6 +62,10 @@ public class ImageDatabase {
         return new ArrayList<ImageBean>();
     }
     
+    public void setImageBeans(ImageBean beans){
+    	imageBeans.add(beans);
+    }
+    
     private void initializeVariables() {
         mImages = new ArrayList<>();
         Path trainPath = Utils.getTestPath("train_text_tags.txt");

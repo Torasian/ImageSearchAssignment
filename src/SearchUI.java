@@ -293,6 +293,7 @@ public class SearchUI extends JFrame{
 							String file = p.getFileName().toString();
 							ImageBean temp = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
 							imageBeans.add(temp);
+//							imageDB.setImageBeans(temp);
 						}
 					} catch (final IOException e){
 						

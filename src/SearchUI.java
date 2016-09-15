@@ -45,14 +45,14 @@ public class SearchUI extends JFrame{
 	private JButton browseJB, loadAllJB;
 	private JLabel browseJL;
 	private JPanel optionJP, imagesJP;
-	private JToggleButton histoJTB, deepJTB, bothJTB;
+	private JToggleButton histoJTB, deepJTB, textJTB, bothJTB;
 	private ArrayList<Image> loadedImages = new ArrayList<>();
 	private String imagePath;
 	private Image browseImg, img;
 	private ImageDatabase imageDB;
 	private int imageWidth = 300;
+	ImageBean query;
 	private ArrayList<ImageBean> imageBeans = new ArrayList<>();
-	private ImageBean images;
 	private  ArrayList<String> imagePaths = new ArrayList<>();
 	private int spc_count=-1;
 
@@ -65,15 +65,16 @@ public class SearchUI extends JFrame{
 
 		histoJTB = new JToggleButton("Colour Histogram");
 		deepJTB = new JToggleButton("Deep Learning");
-		bothJTB = new JToggleButton("Both");
+		textJTB = new JToggleButton("Text Extraction");
+		bothJTB = new JToggleButton("All");
 		loadAllJB = new JButton("Load All");
-		
-		imageDB = new ImageDatabase(imageBeans);
 		
 		imagesJP = new JPanel(new WrapLayout());
 		scrollJSP = new JScrollPane(imagesJP);
 
 		loadAllImages(Utils.getTestPath("data").toString());
+		
+		imageDB = new ImageDatabase(imageBeans);
 		initialise();
 	}
 
@@ -94,6 +95,7 @@ public class SearchUI extends JFrame{
 		getContentPane().add(optionJP);
 		optionJP.add(histoJTB);
 		optionJP.add(deepJTB);
+		optionJP.add(textJTB);
 		optionJP.add(bothJTB);
 		optionJP.add(loadAllJB);
 
@@ -105,6 +107,7 @@ public class SearchUI extends JFrame{
 		bothJTBAction();
 		deepLearningJTBAction();
 		histoColourJTBAction();
+		textJTBAction();
 
 		this.pack();
 		this.setVisible(true);
@@ -168,13 +171,39 @@ public class SearchUI extends JFrame{
 				int state = e.getStateChange();
 				if(state== ItemEvent.SELECTED){
 					imageDB.setExtractFeature(true);
+					imageDB.getSimilarImages(query);
+					printPictures(imageDB.getSimilarImages(query));
 					System.out.println("Deep learning is Selected");
+					scrollJSP.setVisible(true);
 				}
 				else{
 					imageDB.setExtractFeature(false);
 					System.out.println("Deep learning is not selected");
 				}
+				
 
+			}
+		});
+	}
+	
+	private void textJTBAction() {
+		textJTB.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				int state = e.getStateChange();
+				if(state == ItemEvent.SELECTED){
+					imageDB.setExtractingText(true);
+					imageDB.getSimilarImages(query);
+					printPictures(imageDB.getSimilarImages(query));
+					System.out.println("Text Extraction is selected");
+					scrollJSP.setVisible(true);
+				} else {
+					imageDB.setExtractingText(false);
+					System.out.println("Text extraction is not selected");
+				}
+				
+				
 			}
 		});
 	}
@@ -203,8 +232,10 @@ public class SearchUI extends JFrame{
 				
 				Path p = Paths.get(imagePath);
 				String file = p.getFileName().toString();
-				images = new ImageBean(file, imagePath, browseImg, imageDB);
-				imageBeans.add(images);
+				ImageBean query = new ImageBean(file, imagePath, browseImg, imageDB);
+				ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
+				
+				
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -241,7 +272,7 @@ public class SearchUI extends JFrame{
 
 		iterateFiles(spcs);
 		scrollJSP.setVisible(true);
-		printPictures();
+//		printPictures();
 	}
 
 	private void iterateFiles(String spcs) {
@@ -257,8 +288,8 @@ public class SearchUI extends JFrame{
 							String imageP = imagePaths.get(i);
 							Path p = Paths.get(imageP);
 							String file = p.getFileName().toString();
-							images = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
-							imageBeans.add(images);
+							ImageBean temp = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
+							imageBeans.add(temp);
 						}
 					} catch (final IOException e){
 						
@@ -311,17 +342,14 @@ public class SearchUI extends JFrame{
 
 
 
-	private void printPictures() {
+	private void printPictures(ArrayList<ImageBean> printImages) {
 		System.out.println(imagePaths.size());
 		for(int i = 0; i < imagePaths.size(); i++){
-			imagesJP.add(new JLabel(new ImageIcon(imagePaths.get(i))));
+			
+			imagesJP.add(new JLabel(new ImageIcon(printImages.get(i).getFilePath())));
 			revalidate();
 			repaint();
 		}
-	}
-
-	private void extarctFileName(){
-		
 	}
 
 

@@ -20,8 +20,10 @@ public class ImageDatabase {
     private boolean mIsExtractingText;
     private ArrayList<String> allWords;
     private Map<String, ArrayList<String>> fileToListMap;
+    private ArrayList<ImageBean> imageBeans;
     
     public ImageDatabase(ArrayList<ImageBean> images) {
+    	imageBeans = images;
         initializeVariables();
     }
     
@@ -130,6 +132,25 @@ public class ImageDatabase {
     		initializeVariables();
     	}
     	return fileToListMap;
+    }
+    
+    public ArrayList<ImageBean> getSimilarImages(ImageBean query){
+    	if(imageBeans == null || imageBeans.isEmpty()){
+    		return new ArrayList<>();
+    	}
+    	
+    	for (ImageBean imageBean : imageBeans) {
+			imageBean.calculateSimilarity(query);
+		}
+		imageBeans.sort((s1, s2) -> (int) (s2.simValue - s1.simValue));
+		
+		ArrayList<ImageBean> simImages = new ArrayList<>();
+		
+		for (int i = 0; i < 10 && i < imageBeans.size(); i++) {
+			simImages.add(imageBeans.get(i));
+		}
+		return simImages;
+		
     }
     
     public ArrayList<String> getAllWords(Map<String, ArrayList<String>> fileToTagsMap) {

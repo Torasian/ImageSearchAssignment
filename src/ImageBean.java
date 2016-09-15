@@ -148,4 +148,9 @@ public class ImageBean {
         }
         return similarity;
     }
+    
+    private double compareText(ImageBean query){
+		return 0;
+    	
+    }
 }

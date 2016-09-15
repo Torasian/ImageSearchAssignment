@@ -56,7 +56,7 @@ public class SearchUI extends JFrame{
 	private  ArrayList<String> imagePaths = new ArrayList<>();
 	private int spc_count=-1;
 
-	public SearchUI(){
+	public SearchUI() throws IOException{
 
 		browseJB = new JButton("Browse:");
 		browseJL = new JLabel("");
@@ -73,6 +73,7 @@ public class SearchUI extends JFrame{
 		imagesJP = new JPanel(new WrapLayout());
 		scrollJSP = new JScrollPane(imagesJP);
 
+		loadAllImages(Utils.getTestPath("data").toString());
 		initialise();
 	}
 
@@ -203,6 +204,7 @@ public class SearchUI extends JFrame{
 				Path p = Paths.get(imagePath);
 				String file = p.getFileName().toString();
 				images = new ImageBean(file, imagePath, browseImg, imageDB);
+				imageBeans.add(images);
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -246,26 +248,30 @@ public class SearchUI extends JFrame{
 		if(dir.isFile()){
 			for(final String ext : EXTENSIONS){
 				if(dir.getName().endsWith("."+ ext)){
+					imagePaths.add(dir.getAbsolutePath());
 					Image img = null;
 					try{
 						img = ImageIO.read(dir);
 						loadedImages.add(img);
-                        Path p = Paths.get(dir.getAbsolutePath());
-                        String file = p.getFileName().toString();
-                        images = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
-                        imagePaths.add(dir.getAbsolutePath());
+						for (int i = 0; i< imagePaths.size(); i++) {
+							String imageP = imagePaths.get(i);
+							Path p = Paths.get(imageP);
+							String file = p.getFileName().toString();
+							images = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
+							imageBeans.add(images);
+						}
 					} catch (final IOException e){
 						
 					}
 				}
 			}
-		} else if (dir.isDirectory()) {
+		}
+		else if (dir.isDirectory()) {
 
 			File[] listOfFiles = dir.listFiles();
 			if(listOfFiles!=null) {
-				for (int i = 0; i < listOfFiles.length; i++) {
-				    iterateDirectory(listOfFiles[i]);
-				}
+				for (int i = 0; i < listOfFiles.length; i++)
+					iterateDirectory(listOfFiles[i]);
 			} else {
 				System.out.println(spcs + " [ACCESS DENIED]");
 			}
@@ -278,33 +284,23 @@ public class SearchUI extends JFrame{
 
 		spc_count++;
 		String spcs = "";
-		for (int i = 0; i < spc_count; i++) {
-		    spcs += " ";
-		}
-		
+		for (int i = 0; i < spc_count; i++)
+			spcs += " ";
+
+
 		if(aFile.isFile()){
 			for(final String ext : EXTENSIONS){
 				if(aFile.getName().endsWith("."+ ext)){
-				    Image img = null;
-                    try{
-                        img = ImageIO.read(aFile);
-                        loadedImages.add(img);
-                        Path p = Paths.get(aFile.getAbsolutePath());
-                        String file = p.getFileName().toString();
-                        images = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
-                        imagePaths.add(dir.getAbsolutePath());
-                    } catch (final IOException e){
-                        
-                    }
+					imagePaths.add(aFile.getAbsolutePath());
 				}
 			}
-		} else if (aFile.isDirectory()) {
+		}
+		else if (aFile.isDirectory()) {
 
 			File[] listOfFiles = aFile.listFiles();
 			if(listOfFiles!=null) {
-				for (int i = 0; i < listOfFiles.length; i++) {
-				    iterateDirectory(listOfFiles[i]);
-				}
+				for (int i = 0; i < listOfFiles.length; i++)
+					iterateDirectory(listOfFiles[i]);
 			} else {
 				System.out.println(spcs + " [ACCESS DENIED]");
 			}
@@ -329,7 +325,7 @@ public class SearchUI extends JFrame{
 	}
 
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException{
 		SearchUI demo = new SearchUI();
 	
 	}

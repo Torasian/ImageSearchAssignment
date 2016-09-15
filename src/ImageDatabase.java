@@ -69,11 +69,12 @@ public class ImageDatabase {
         allWords = getAllWords(fileToListMap);
     }
     
-    public ArrayList<String> getTagsForFilename(String filename){
-    	if(!fileToListMap.containsKey(filename)){
+    public ArrayList<String> getTagsForFileName(String fileName){
+    	if(!fileToListMap.containsKey(fileName)){
     		return new ArrayList<>();
     	}
-    	return fileToListMap.get(filename);
+    	System.out.println(fileToListMap.get(fileName).toString());
+    	return fileToListMap.get(fileName);
     }
     
     public ArrayList<Integer> getVectorForTags(ArrayList<String> fileTags, ArrayList<String> allWords){
@@ -82,8 +83,8 @@ public class ImageDatabase {
     	int j= 0;
     	
     	for (int i = 0; i < allWords.size(); i++) {
-			if (allWords.get(i).equals(fileTags.get(j))) {
-				tagMatches.add(i);
+			if (j < fileTags.size() && allWords.get(i).equals(fileTags.get(j))) {
+				tagMatches.add(1);
 				j++;
 			} else {
 				tagMatches.add(0);
@@ -94,27 +95,41 @@ public class ImageDatabase {
     	return tagMatches;
     }
     
-    public Map<String, ArrayList<String>> getFileToTagListMap(String path) {
+    private Map<String, ArrayList<String>> getFileToTagListMap(String path) {
         Map<String, ArrayList<String>> fileToTagsMap = new HashMap<>();
 
         try (FileReader input = new FileReader(path); BufferedReader br = new BufferedReader(input)) {
             String str;
+            boolean found = false;
             
             while ((str = br.readLine()) != null) {
                 String[] tags = str.split(" ");
                 String fileName = tags[0];
                 Set<String> tagSet = new HashSet<>();
                 for (int i = 1; i < tags.length; ++i) {
-                    tagSet.add(tags[i]);
+                	String tag = tags[i].trim();
+                	if (!tag.equals("")) {
+                		tagSet.add(tag);
+                	}
                 }
                 ArrayList<String> tagsForFile = new ArrayList<>(tagSet);
                 Collections.sort(tagsForFile);
+                System.out.println(fileName);
+                found = found || "0037_61248472.jpg".equals(fileName);
                 fileToTagsMap.put(fileName, tagsForFile);
             }
+            System.out.println(found);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return fileToTagsMap;
+    }
+    
+    public Map<String, ArrayList<String>> getFileToTagListMap() {
+    	if (fileToListMap == null) {
+    		initializeVariables();
+    	}
+    	return fileToListMap;
     }
     
     public ArrayList<String> getAllWords(Map<String, ArrayList<String>> fileToTagsMap) {
@@ -122,7 +137,9 @@ public class ImageDatabase {
         for (String fileName : fileToTagsMap.keySet()) {
             ArrayList<String> fileTags = fileToTagsMap.get(fileName);
             for (String tag : fileTags) {
-                allTagsSet.add(tag);
+            	if (!tag.trim().equals("")) {
+            		allTagsSet.add(tag);
+            	}
             }
         }
         ArrayList<String> allTags = new ArrayList<>(allTagsSet);

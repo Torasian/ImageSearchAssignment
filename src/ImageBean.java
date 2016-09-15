@@ -26,10 +26,11 @@ public class ImageBean {
     private Image mImageInformation;
     private ImageDatabase mImageDatabase;
     private ArrayList<String> tags;
-    private ArrayList<Integer> intTags = new ArrayList<>();
+    private ArrayList<Integer> intTags;
     private String mFilePath;
     private String mFileName;
     private static Histogram hist;
+    public double simValue;
     
     public ImageBean(String fileName, String filePath, Image imageInformation, ImageDatabase imageDatabase) {
         mImageInformation = imageInformation;
@@ -37,6 +38,7 @@ public class ImageBean {
         mFileName = fileName;
         mImageDatabase = imageDatabase;
         mFeatureToProbMap = new HashMap<>();
+        intTags = new ArrayList<>();
         initialize();
     }
     
@@ -58,10 +60,10 @@ public class ImageBean {
      * it calculates a search vector that can be compared
      * to another ImageBean's search vector
      */
-    public double calculateSimilarity(ImageBean query) {
+    public void calculateSimilarity(ImageBean query) {
         double similarityValue = 0;
         if (mImageDatabase.isExtractingColor()) {
-            
+            similarityValue += compareText(query);
         }
         
         if (mImageDatabase.isExtractingFeature()) {
@@ -72,11 +74,11 @@ public class ImageBean {
             
         }
         
-        return similarityValue;
+        this.simValue = similarityValue;
     }
     
     private void initialize() {
-        //extractFeature();
+        extractFeature();
         extractColor();
         extractText();
     }
@@ -149,8 +151,30 @@ public class ImageBean {
         return similarity;
     }
     
+    private ArrayList<Integer> getIntTags(){
+    	return intTags;
+    }
+    
     private double compareText(ImageBean query){
-		return 0;
+    	double similarity = 0;
+    	ArrayList<Integer> queryVector = query.getIntTags();
+    	ArrayList<Integer> currentVector = intTags;
+    	
+    	
+    	if (queryVector.size() != currentVector.size()) {
+    		return 0;
+    	}
+    	
+    	for (int i = 0; i < queryVector.size(); ++i) {
+    		int topHalf =queryVector.get(i)*currentVector.get(i);
+    		int querySquared = queryVector.get(i) * queryVector.get(i);
+    		int currentSquared = currentVector.get(i) * currentVector.get(i);
+    		double bottomHalf = Math.sqrt(querySquared*currentSquared);
+    		similarity+= bottomHalf;
+    		
+    	}
+    	
+		return similarity;
     	
     }
 }

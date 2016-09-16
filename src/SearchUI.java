@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.SpringLayout;
 
+
 public class SearchUI extends JFrame{
 
 	// File representing the folder that you select using a FileChooser
@@ -49,13 +50,20 @@ public class SearchUI extends JFrame{
 	private ArrayList<Image> loadedImages = new ArrayList<>();
 	private String imagePath;
 	private Image browseImg, img;
-	private ImageDatabase imageDB;
+	private ImageDatabase imageDB, browseDB;
 	private int imageWidth = 300;
 	ImageBean query;
 	private ArrayList<ImageBean> imageBeans = new ArrayList<>();
+	private ArrayList<ImageBean> browseBeans = new ArrayList<>();
 	private  ArrayList<String> imagePaths = new ArrayList<>();
 	private int spc_count=-1;
-
+	
+ 	private static Histogram histogram1;
+	private static Histogram histogram2;
+	private static ColourHistCompare compare;
+	private ArrayList<String> sortedPath = new ArrayList<>();
+	
+	
 	public SearchUI() throws IOException{
 
 		browseJB = new JButton("Browse:");
@@ -75,6 +83,7 @@ public class SearchUI extends JFrame{
 		loadAllImages(Utils.getTestPath("data").toString());
 		
 		imageDB = new ImageDatabase(imageBeans);
+		browseDB = new ImageDatabase(browseBeans);
 		initialise();
 	}
 
@@ -120,7 +129,8 @@ public class SearchUI extends JFrame{
 	 * Creates an item listener event for when the histoColourJTB is selected
 	 */
 	private void histoColourJTBAction() {
-		ImageBean.extractColor();
+		ImageBean.ColourHistSimilarityCal();
+		//compareColor(query);
 		histoJTB.addItemListener(new ItemListener() {
 
 			@Override
@@ -172,7 +182,7 @@ public class SearchUI extends JFrame{
 				if(state== ItemEvent.SELECTED){
 					imageDB.setExtractFeature(true);
 					imageDB.getSimilarImages(query);
-					printPictures(imageDB.getSimilarImages(query));
+//					printPictures(imageDB.getSimilarImages(query));
 					System.out.println("Deep learning is Selected");
 					scrollJSP.setVisible(true);
 				}
@@ -196,7 +206,7 @@ public class SearchUI extends JFrame{
 					imageDB.setExtractingText(true);
 					System.out.println(imageDB.getSimilarImages(query));
 					imageDB.getSimilarImages(query);
-					printPictures(imageDB.getSimilarImages(query));
+//					printPictures(imageDB.getSimilarImages(query));
 					System.out.println("Text Extraction is selected");
 					scrollJSP.setVisible(true);
 				} else {
@@ -233,11 +243,13 @@ public class SearchUI extends JFrame{
 				
 				Path p = Paths.get(imagePath);
 				String file = p.getFileName().toString();
-				query = new ImageBean(file, imagePath, browseImg, imageDB);
-				ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
+				query = new ImageBean(file, imagePath, imageDB);
+				//compareColor(query);
+				//browseBeans.add(query);
+				//ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
 				
-				textJTBAction(query);
-				deepLearningJTBAction(query);
+				//textJTBAction(query);
+				//deepLearningJTBAction(query);
 				
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
 			} catch (IOException e1) {
@@ -245,6 +257,7 @@ public class SearchUI extends JFrame{
 				e1.printStackTrace();
 			}
 			browseJL.setIcon(new ImageIcon(browseImg));
+			compareColor(query);
 		}
 	}
 
@@ -275,8 +288,11 @@ public class SearchUI extends JFrame{
 
 		iterateFiles(spcs);
 		scrollJSP.setVisible(true);
+		createImageBeans();
 //		printPictures();
 	}
+
+
 
 	private void iterateFiles(String spcs) {
 		if(dir.isFile()){
@@ -285,16 +301,17 @@ public class SearchUI extends JFrame{
 					imagePaths.add(dir.getAbsolutePath());
 					Image img = null;
 					try{
-						img = ImageIO.read(dir);
+						img = ImageIO.read(new File(dir.getAbsolutePath()));
 						loadedImages.add(img);
-						for (int i = 0; i< imagePaths.size(); i++) {
-							String imageP = imagePaths.get(i);
-							Path p = Paths.get(imageP);
-							String file = p.getFileName().toString();
-							ImageBean temp = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
-							imageBeans.add(temp);
-//							imageDB.setImageBeans(temp);
-						}
+						System.out.println(loadedImages.size());
+//						for (int i = 0; i< imagePaths.size(); i++) {
+//							String imageP = imagePaths.get(i);
+//							Path p = Paths.get(imageP);
+//							String file = p.getFileName().toString();
+//							ImageBean temp = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
+//							imageBeans.add(temp);
+////							imageDB.setImageBeans(temp);
+//						}
 					} catch (final IOException e){
 						
 					}
@@ -327,6 +344,16 @@ public class SearchUI extends JFrame{
 			for(final String ext : EXTENSIONS){
 				if(aFile.getName().endsWith("."+ ext)){
 					imagePaths.add(aFile.getAbsolutePath());
+					Image img1 = null;
+					try{
+						img = ImageIO.read(new File(dir.getAbsolutePath()));
+						loadedImages.add(img);
+						System.out.println(loadedImages.size());
+
+					} catch (final IOException e){
+						
+					}
+					
 				}
 			}
 		}
@@ -347,12 +374,70 @@ public class SearchUI extends JFrame{
 	public String getBrowsePath(){
 		return imagePath;
 	}
-
-	private void printPictures(ArrayList<ImageBean> printImages) {
-		System.out.println(imagePaths.size());
-		for(int i = 0; i < imagePaths.size(); i++){
+	
+	/*public ArrayList<String> getImagePath(){
+		return imagePaths;
+	}*/
+	
+	
+	public void createImageBeans() throws IOException{
+		//BufferedImage img = null;
+		for (int i = 0; i < 10; i++) {
 			
-			imagesJP.add(new JLabel(new ImageIcon(printImages.get(i).getFilePath())));
+			String imageP = imagePaths.get(i);
+			Path p = Paths.get(imageP);
+			String file = p.getFileName().toString();
+			ImageBean images = new ImageBean(file, imageP, imageDB);
+			imageBeans.add(images);
+			//System.out.println(imageBeans.size());
+		}
+		//compareColor(query);
+	}
+	
+	public void compareColor(ImageBean query){
+    	double similarity = 0;
+    	double max = 0;
+    	histogram1 = new Histogram();
+		histogram2 = new Histogram();
+		try{
+			for (int i=0; i< imagePaths.size();++i ){
+			String Path1 = query.getFilePath();
+			String Path2 = imagePaths.get(i);
+			System.out.println(Path2);
+			BufferedImage img1 = ImageIO.read(new File(Path1));
+			BufferedImage img2 = ImageIO.read(new File(Path2));
+			double[] histVal1 = histogram1.getHist(img1);
+			double[] histVal2 = histogram1.getHist(img2);
+			compare = new ColourHistCompare();
+			double distance;
+			distance = compare.calculateDistance(histVal1, histVal2);
+			similarity = 1- distance;
+			sortedPath.add(Path2);
+				if (similarity >= max){
+					sortedPath.add(i, Path2);
+					max = similarity;
+				}
+			System.out.println("Colour Histogram Similarity:");
+			System.out.println(similarity);
+			System.out.println(sortedPath);
+		}
+			//System.out.println(sortedPath);
+		}
+		catch (IOException e) {
+    	}
+	   	//return similarity;
+	   	
+    }
+	
+	private void printPictures() {
+		System.out.println("ImagePaths size: "+ imagePaths.size());
+		System.out.println("Imagebeans size: "+ imageBeans.size());
+		System.out.println(imageBeans.get(0).getFileName());
+		System.out.println(imageBeans.get(1).getFilePath());
+		
+		for(int i = 0; i < 10; i++){
+			
+			imagesJP.add(new JLabel(new ImageIcon(imagePaths.get(i)))); //change imagePaths to sortedPath
 			revalidate();
 			repaint();
 		}

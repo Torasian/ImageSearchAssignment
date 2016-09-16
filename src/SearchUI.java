@@ -49,10 +49,11 @@ public class SearchUI extends JFrame{
 	private ArrayList<Image> loadedImages = new ArrayList<>();
 	private String imagePath;
 	private Image browseImg, img;
-	private ImageDatabase imageDB;
+	private ImageDatabase imageDB, browseDB;
 	private int imageWidth = 300;
 	ImageBean query;
 	private ArrayList<ImageBean> imageBeans = new ArrayList<>();
+	private ArrayList<ImageBean> browseBeans = new ArrayList<>();
 	private  ArrayList<String> imagePaths = new ArrayList<>();
 	private int spc_count=-1;
 
@@ -75,6 +76,7 @@ public class SearchUI extends JFrame{
 		loadAllImages(Utils.getTestPath("data").toString());
 		
 		imageDB = new ImageDatabase(imageBeans);
+		browseDB = new ImageDatabase(browseBeans);
 		initialise();
 	}
 
@@ -120,7 +122,7 @@ public class SearchUI extends JFrame{
 	 * Creates an item listener event for when the histoColourJTB is selected
 	 */
 	private void histoColourJTBAction() {
-		ImageBean.extractColor();
+		
 		histoJTB.addItemListener(new ItemListener() {
 
 			@Override
@@ -234,6 +236,7 @@ public class SearchUI extends JFrame{
 				Path p = Paths.get(imagePath);
 				String file = p.getFileName().toString();
 				query = new ImageBean(file, imagePath, browseImg, imageDB);
+				browseBeans.add(query);
 				ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
 				
 				textJTBAction(query);
@@ -344,7 +347,7 @@ public class SearchUI extends JFrame{
 	}
 
 
-	private String getBrowsePath(){
+	public String getBrowsePath(){
 		return imagePath;
 	}
 

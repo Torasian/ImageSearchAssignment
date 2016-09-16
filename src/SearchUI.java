@@ -174,7 +174,7 @@ public class SearchUI extends JFrame{
 				if(state== ItemEvent.SELECTED){
 					imageDB.setExtractFeature(true);
 					imageDB.getSimilarImages(query);
-					printPictures(imageDB.getSimilarImages(query));
+//					printPictures(imageDB.getSimilarImages(query));
 					System.out.println("Deep learning is Selected");
 					scrollJSP.setVisible(true);
 				}
@@ -198,7 +198,7 @@ public class SearchUI extends JFrame{
 					imageDB.setExtractingText(true);
 					System.out.println(imageDB.getSimilarImages(query));
 					imageDB.getSimilarImages(query);
-					printPictures(imageDB.getSimilarImages(query));
+//					printPictures(imageDB.getSimilarImages(query));
 					System.out.println("Text Extraction is selected");
 					scrollJSP.setVisible(true);
 				} else {
@@ -235,7 +235,7 @@ public class SearchUI extends JFrame{
 				
 				Path p = Paths.get(imagePath);
 				String file = p.getFileName().toString();
-				query = new ImageBean(file, imagePath, browseImg, imageDB);
+				query = new ImageBean(file, imagePath, imageDB);
 				browseBeans.add(query);
 				ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
 				
@@ -278,7 +278,8 @@ public class SearchUI extends JFrame{
 
 		iterateFiles(spcs);
 		scrollJSP.setVisible(true);
-//		printPictures();
+		createImageBeans();
+		printPictures();
 	}
 
 	private void iterateFiles(String spcs) {
@@ -288,16 +289,17 @@ public class SearchUI extends JFrame{
 					imagePaths.add(dir.getAbsolutePath());
 					Image img = null;
 					try{
-						img = ImageIO.read(dir);
+						img = ImageIO.read(new File(dir.getAbsolutePath()));
 						loadedImages.add(img);
-						for (int i = 0; i< imagePaths.size(); i++) {
-							String imageP = imagePaths.get(i);
-							Path p = Paths.get(imageP);
-							String file = p.getFileName().toString();
-							ImageBean temp = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
-							imageBeans.add(temp);
-//							imageDB.setImageBeans(temp);
-						}
+						System.out.println(loadedImages.size());
+//						for (int i = 0; i< imagePaths.size(); i++) {
+//							String imageP = imagePaths.get(i);
+//							Path p = Paths.get(imageP);
+//							String file = p.getFileName().toString();
+//							ImageBean temp = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
+//							imageBeans.add(temp);
+////							imageDB.setImageBeans(temp);
+//						}
 					} catch (final IOException e){
 						
 					}
@@ -330,6 +332,16 @@ public class SearchUI extends JFrame{
 			for(final String ext : EXTENSIONS){
 				if(aFile.getName().endsWith("."+ ext)){
 					imagePaths.add(aFile.getAbsolutePath());
+					Image img1 = null;
+					try{
+						img = ImageIO.read(new File(dir.getAbsolutePath()));
+						loadedImages.add(img);
+						System.out.println(loadedImages.size());
+
+					} catch (final IOException e){
+						
+					}
+					
 				}
 			}
 		}
@@ -350,12 +362,30 @@ public class SearchUI extends JFrame{
 	public String getBrowsePath(){
 		return imagePath;
 	}
-
-	private void printPictures(ArrayList<ImageBean> printImages) {
-		System.out.println(imagePaths.size());
+	
+	private void createImageBeans() throws IOException{
+		BufferedImage img = null;
+		for (int i = 0; i < imagePaths.size(); i++) {
+			
+			String imageP = imagePaths.get(i);
+			Path p = Paths.get(imageP);
+			String file = p.getFileName().toString();
+			ImageBean images = new ImageBean(file, imageP, imageDB);
+			imageBeans.add(images);
+		}
+	}
+	
+	
+	
+	private void printPictures() {
+		System.out.println("ImagePaths size: "+ imagePaths.size());
+		System.out.println("Imagebeans size: "+ imageBeans.size());
+		System.out.println(imageBeans.get(0).getFileName());
+		System.out.println(imageBeans.get(1).getFilePath());
+		
 		for(int i = 0; i < imagePaths.size(); i++){
 			
-			imagesJP.add(new JLabel(new ImageIcon(printImages.get(i).getFilePath())));
+			imagesJP.add(new JLabel(new ImageIcon(imagePaths.get(i))));
 			revalidate();
 			repaint();
 		}

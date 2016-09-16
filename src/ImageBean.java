@@ -33,14 +33,14 @@ public class ImageBean {
     public double simValue;
     private SearchUI search;
     
-    public ImageBean(String fileName, String filePath, Image imageInformation, ImageDatabase imageDatabase) {
-        mImageInformation = imageInformation;
+    public ImageBean(String fileName, String filePath, ImageDatabase imageDatabase) {
+//        mImageInformation = imageInformation;
         mFilePath = filePath;
         mFileName = fileName;
         mImageDatabase = imageDatabase;
         mFeatureToProbMap = new HashMap<>();
         intTags = new ArrayList<>();
-        initialize();
+//        initialize();
     }
     
     public String getFilePath() {
@@ -117,7 +117,7 @@ public class ImageBean {
     public void extractColor() {
     	double histvalue[];
     	try {
-    		String browsePath = search.getBrowsePath();
+    		String browsePath = getFilePath();
     		BufferedImage img1 = ImageIO.read(new File(browsePath));
         	hist = new Histogram();
             histvalue = hist.getHist(img1);

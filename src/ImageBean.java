@@ -31,6 +31,7 @@ public class ImageBean {
     private String mFileName;
     private static Histogram hist;
     public double simValue;
+    private static SearchUI Search;
     
     public ImageBean(String fileName, String filePath, Image imageInformation, ImageDatabase imageDatabase) {
         mImageInformation = imageInformation;
@@ -116,16 +117,18 @@ public class ImageBean {
     public static void extractColor() {
     	double histvalue[];
     	try {
-    		BufferedImage img1 = ImageIO.read(new File("/Users/Admin/Documents/NUS/Sem-1-2016-17/CS2108/Assignment/ImageSeach_demo/dataset/0028_1070815604.jpg"));
+    		String path;
+        	path = Search.getBrowsePath();
+    		BufferedImage img1 = ImageIO.read(new File(path));
         	hist = new Histogram();
             histvalue = hist.getHist(img1);
        	 for (int i=0; i<histvalue.length; i++){
     		 System.out.println(histvalue[i]);
     	 }
     	} catch (IOException e) {
-    		
     	}
-    }
+    	}
+//}
     
     /**
      * mFeatureToProbMap    = { "dog": 0.95, "cat": 0.4, "sky": 0.9 }

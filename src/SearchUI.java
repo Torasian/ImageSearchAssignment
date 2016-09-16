@@ -344,7 +344,7 @@ public class SearchUI extends JFrame{
 	}
 
 
-	private String getBrowsePath(){
+	public String getBrowsePath(){
 		return imagePath;
 	}
 

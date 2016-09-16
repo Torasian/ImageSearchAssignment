@@ -344,7 +344,9 @@ public class SearchUI extends JFrame{
 	}
 
 
-
+	private String getBrowsePath(){
+		return imagePath;
+	}
 
 	private void printPictures(ArrayList<ImageBean> printImages) {
 		System.out.println(imagePaths.size());

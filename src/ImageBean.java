@@ -63,7 +63,7 @@ public class ImageBean {
     public void calculateSimilarity(ImageBean query) {
         double similarityValue = 0;
         if (mImageDatabase.isExtractingColor()) {
-            
+        	similarityValue += compareColor(query);
         }
         
         if (mImageDatabase.isExtractingFeature()) {
@@ -150,6 +150,16 @@ public class ImageBean {
         }
         return similarity;
     }
+    
+    private double compareColor(ImageBean query){
+    	double similarity = 0;
+    	
+    	
+    	
+    	
+    	return similarity;
+    }
+    
     
     private ArrayList<Integer> getIntTags(){
     	return intTags;

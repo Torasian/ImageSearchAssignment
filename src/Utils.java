@@ -24,4 +24,14 @@ public class Utils {
         }
         return currentRelativePath;
     }
+    
+    public static Path getFeaturePath(String fileName) {
+        Path currentRelativePath = getRelativePath();
+        currentRelativePath = currentRelativePath.resolve("feature");
+        if (fileName == null || fileName.isEmpty()) {
+            throw new IllegalArgumentException("filename is invalid");
+        }
+        currentRelativePath = currentRelativePath.resolve(fileName);
+        return currentRelativePath;
+    }
 }

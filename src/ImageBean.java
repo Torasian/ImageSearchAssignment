@@ -100,6 +100,11 @@ public class ImageBean {
      */
     public void extractFeature() {
         mFeatureToProbMap.clear();
+        if (isExtracted(mFileName)) {
+            mFeatureToProbMap = getExtractedFeatureList(mFileName);
+            return;
+        }
+        
         Map<String, Double> mFeatureToProbMap = new HashMap<>();
         ClarifaiClient clarifai = new ClarifaiClient(
                 "fcq9IaGGv6G_Pm1yirdPapOa13pYpoamNDLOPX3s",
@@ -115,6 +120,7 @@ public class ImageBean {
                 mFeatureToProbMap.put(tag.getName(), tag.getProbability());
             }
         }
+        saveFeatureMap(mFileName, mFeatureToProbMap);
     }
 
     public void extractText() {
@@ -139,6 +145,22 @@ public class ImageBean {
             }
         } catch (IOException e) {
         }
+    }
+    
+    private boolean isExtracted(String fileName) {
+        boolean isExtracted = false;
+        String filePath = Utils.getFeaturePath(fileName).toString();
+        File f = new File(filePath);
+        return f.exists() && !f.isDirectory();
+    }
+    
+    private Map<String, Double> getExtractedFeatureList(String fileName) {
+        Map<String, Double> featureMap = new HashMap<>();
+        return featureMap;
+    }
+    
+    private void saveFeatureMap(String fileName, Map<String, Double> featureMap) {
+        
     }
 
     /**
@@ -165,7 +187,6 @@ public class ImageBean {
     }
 
     public static void ColourHistSimilarityCal() {
-
         try {
             BufferedImage img1 = ImageIO
                     .read(new File(

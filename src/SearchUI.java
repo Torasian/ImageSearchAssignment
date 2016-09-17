@@ -54,8 +54,7 @@ public class SearchUI extends JFrame{
 	private int imageWidth = 300;
 	ImageBean query;
 	private ArrayList<ImageBean> imageBeans = new ArrayList<>();
-	private ArrayList<ImageBean> browseBeans = new ArrayList<>();
-	private  ArrayList<String> imagePaths = new ArrayList<>();
+	private ArrayList<String> imagePaths = new ArrayList<>();
 	private int spc_count=-1;
 	
  	private static Histogram histogram1;
@@ -63,9 +62,7 @@ public class SearchUI extends JFrame{
 	private static ColourHistCompare compare;
 	private ArrayList<String> sortedPath = new ArrayList<>();
 	
-	
 	public SearchUI() throws IOException{
-
 		browseJB = new JButton("Browse:");
 		browseJL = new JLabel("");
 
@@ -81,14 +78,12 @@ public class SearchUI extends JFrame{
 		scrollJSP = new JScrollPane(imagesJP);
 
 		loadAllImages(Utils.getTestPath("data").toString());
-		
 		imageDB = new ImageDatabase(imageBeans);
-		browseDB = new ImageDatabase(browseBeans);
+		
 		initialise();
 	}
 
 	private void initialise() {
-
 		getContentPane().setPreferredSize(new Dimension(1000, 1000));;
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
 		this.setResizable(true);
@@ -117,12 +112,8 @@ public class SearchUI extends JFrame{
 		
 		histoColourJTBAction();
 		
-
 		this.pack();
 		this.setVisible(true);
-		
-		
-
 	}
 
 	/**
@@ -136,11 +127,10 @@ public class SearchUI extends JFrame{
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				int state = e.getStateChange();
-				if(state== ItemEvent.SELECTED){
+				if( state == ItemEvent.SELECTED){
 					imageDB.setExtractColor(true);
 					System.out.println("Color Histogram selected");
-				}
-				else{
+				} else{
 					imageDB.setExtractColor(false);
 					System.out.println("Color Histogram is Not selected");
 				}
@@ -160,15 +150,13 @@ public class SearchUI extends JFrame{
 					imageDB.setExtractFeature(true);
 					imageDB.setExtractColor(true);
 					System.out.println("both features are Selected");
-				}
-				else{
+				} else{
 					histoJTB.setEnabled(true);
 					deepJTB.setEnabled(true);
 					imageDB.setExtractFeature(false);
 					imageDB.setExtractColor(false);
 					System.out.println("both features have been deselected");
 				}
-
 			}
 		});
 	}
@@ -185,13 +173,10 @@ public class SearchUI extends JFrame{
 //					printPictures(imageDB.getSimilarImages(query));
 					System.out.println("Deep learning is Selected");
 					scrollJSP.setVisible(true);
-				}
-				else{
+				} else{
 					imageDB.setExtractFeature(false);
 					System.out.println("Deep learning is not selected");
 				}
-				
-
 			}
 		});
 	}
@@ -213,8 +198,6 @@ public class SearchUI extends JFrame{
 					imageDB.setExtractingText(false);
 					System.out.println("Text extraction is not selected");
 				}
-				
-				
 			}
 		});
 	}
@@ -240,12 +223,10 @@ public class SearchUI extends JFrame{
 			browseImg = null;
 			try {
 				browseImg = ImageIO.read(new File(imagePath));
-				
 				Path p = Paths.get(imagePath);
 				String file = p.getFileName().toString();
-				query = new ImageBean(file, imagePath, imageDB);
-				//compareColor(query);
-				//browseBeans.add(query);
+				query = new ImageBean(file, imagePath, (BufferedImage) browseImg, imageDB);
+				compareColor(query);
 				//ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
 				
 				//textJTBAction(query);
@@ -253,7 +234,6 @@ public class SearchUI extends JFrame{
 				
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			browseJL.setIcon(new ImageIcon(browseImg));
@@ -269,7 +249,6 @@ public class SearchUI extends JFrame{
 				try {
 					loadAllImages(Utils.getTestPath("data").toString());
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -283,8 +262,9 @@ public class SearchUI extends JFrame{
 
 		spc_count++;
 		String spcs = "";
-		for (int i = 0; i < spc_count; i++)
-			spcs += " ";
+		for (int i = 0; i < spc_count; i++) {
+		    spcs += " ";
+		}
 
 		iterateFiles(spcs);
 		scrollJSP.setVisible(true);
@@ -292,38 +272,14 @@ public class SearchUI extends JFrame{
 //		printPictures();
 	}
 
-
-
+	
 	private void iterateFiles(String spcs) {
-		if(dir.isFile()){
-			for(final String ext : EXTENSIONS){
-				if(dir.getName().endsWith("."+ ext)){
-					imagePaths.add(dir.getAbsolutePath());
-					Image img = null;
-					try{
-						img = ImageIO.read(new File(dir.getAbsolutePath()));
-						loadedImages.add(img);
-						System.out.println(loadedImages.size());
-//						for (int i = 0; i< imagePaths.size(); i++) {
-//							String imageP = imagePaths.get(i);
-//							Path p = Paths.get(imageP);
-//							String file = p.getFileName().toString();
-//							ImageBean temp = new ImageBean(file, dir.getAbsolutePath(), img, imageDB);
-//							imageBeans.add(temp);
-////							imageDB.setImageBeans(temp);
-//						}
-					} catch (final IOException e){
-						
-					}
-				}
-			}
-		}
-		else if (dir.isDirectory()) {
-
+		if (dir.isDirectory()) {
 			File[] listOfFiles = dir.listFiles();
-			if(listOfFiles!=null) {
-				for (int i = 0; i < listOfFiles.length; i++)
-					iterateDirectory(listOfFiles[i]);
+			if(listOfFiles != null) {
+				for (int i = 0; i < listOfFiles.length; i++) {
+				    iterateDirectory(listOfFiles[i]);
+				}
 			} else {
 				System.out.println(spcs + " [ACCESS DENIED]");
 			}
@@ -333,31 +289,26 @@ public class SearchUI extends JFrame{
 
 
 	private void iterateDirectory(File aFile){
-
 		spc_count++;
 		String spcs = "";
-		for (int i = 0; i < spc_count; i++)
-			spcs += " ";
-
+		for (int i = 0; i < spc_count; i++) {
+		    spcs += " ";
+		}
 
 		if(aFile.isFile()){
 			for(final String ext : EXTENSIONS){
 				if(aFile.getName().endsWith("."+ ext)){
-					imagePaths.add(aFile.getAbsolutePath());
-					Image img1 = null;
+				    Image img;
 					try{
-						img = ImageIO.read(new File(dir.getAbsolutePath()));
+						img = ImageIO.read(new File(aFile.getAbsolutePath()));
 						loadedImages.add(img);
-						System.out.println(loadedImages.size());
-
+						imagePaths.add(aFile.getAbsolutePath());
 					} catch (final IOException e){
-						
+						e.printStackTrace();
 					}
-					
 				}
 			}
-		}
-		else if (aFile.isDirectory()) {
+		} else if (aFile.isDirectory()) {
 
 			File[] listOfFiles = aFile.listFiles();
 			if(listOfFiles!=null) {
@@ -375,22 +326,16 @@ public class SearchUI extends JFrame{
 		return imagePath;
 	}
 	
-	/*public ArrayList<String> getImagePath(){
-		return imagePaths;
-	}*/
-	
-	
 	public void createImageBeans() throws IOException{
-		//BufferedImage img = null;
-		for (int i = 0; i < 10; i++) {
-			
+		for (int i = 0; i < imagePaths.size(); i++) {
 			String imageP = imagePaths.get(i);
 			Path p = Paths.get(imageP);
+			BufferedImage img = ImageIO.read(new File(imageP));
 			String file = p.getFileName().toString();
-			ImageBean images = new ImageBean(file, imageP, imageDB);
+			ImageBean images = new ImageBean(file, imageP, img, imageDB);
 			imageBeans.add(images);
-			//System.out.println(imageBeans.size());
 		}
+		System.out.println(imageBeans.size());
 		//compareColor(query);
 	}
 	
@@ -446,7 +391,6 @@ public class SearchUI extends JFrame{
 
 	public static void main(String[] args) throws IOException{
 		SearchUI demo = new SearchUI();
-	
 	}
 
 }

@@ -14,7 +14,6 @@ import java.util.Set;
  * Class used to store Image Information
  */
 public class ImageDatabase {
-    private ArrayList<ImageBean> mImages;
     private boolean mIsExtractingColor;
     private boolean mIsExtractingFeature;
     private boolean mIsExtractingText;
@@ -23,8 +22,9 @@ public class ImageDatabase {
     private ArrayList<ImageBean> imageBeans;
     
     public ImageDatabase(ArrayList<ImageBean> images) {
-    	imageBeans = images;
+    	imageBeans = images;    	
         initializeVariables();
+        extractBeans();
     }
     
     /**
@@ -66,8 +66,13 @@ public class ImageDatabase {
     	imageBeans.add(beans);
     }
     
+    private void extractBeans() {
+        for (int i = 0; i < imageBeans.size(); ++i) {
+            imageBeans.get(i).initialize();
+        }
+    }
+    
     private void initializeVariables() {
-        mImages = new ArrayList<>();
         Path trainPath = Utils.getTestPath("train_text_tags.txt");
         Path testPath = Utils.getTestPath("../test/test_text_tags.txt");
         String path = trainPath.toString();

@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.SpringLayout;
 
+
 public class SearchUI extends JFrame{
 
 	// File representing the folder that you select using a FileChooser
@@ -56,7 +57,13 @@ public class SearchUI extends JFrame{
 	private ArrayList<ImageBean> browseBeans = new ArrayList<>();
 	private  ArrayList<String> imagePaths = new ArrayList<>();
 	private int spc_count=-1;
-
+	
+ 	private static Histogram histogram1;
+	private static Histogram histogram2;
+	private static ColourHistCompare compare;
+	private ArrayList<String> sortedPath = new ArrayList<>();
+	
+	
 	public SearchUI() throws IOException{
 
 		browseJB = new JButton("Browse:");
@@ -122,7 +129,8 @@ public class SearchUI extends JFrame{
 	 * Creates an item listener event for when the histoColourJTB is selected
 	 */
 	private void histoColourJTBAction() {
-		
+		ImageBean.ColourHistSimilarityCal();
+		//compareColor(query);
 		histoJTB.addItemListener(new ItemListener() {
 
 			@Override
@@ -236,11 +244,12 @@ public class SearchUI extends JFrame{
 				Path p = Paths.get(imagePath);
 				String file = p.getFileName().toString();
 				query = new ImageBean(file, imagePath, imageDB);
-				browseBeans.add(query);
-				ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
+				//compareColor(query);
+				//browseBeans.add(query);
+				//ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
 				
-				textJTBAction(query);
-				deepLearningJTBAction(query);
+				//textJTBAction(query);
+				//deepLearningJTBAction(query);
 				
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
 			} catch (IOException e1) {
@@ -248,6 +257,7 @@ public class SearchUI extends JFrame{
 				e1.printStackTrace();
 			}
 			browseJL.setIcon(new ImageIcon(browseImg));
+			compareColor(query);
 		}
 	}
 
@@ -279,8 +289,10 @@ public class SearchUI extends JFrame{
 		iterateFiles(spcs);
 		scrollJSP.setVisible(true);
 		createImageBeans();
-		printPictures();
+//		printPictures();
 	}
+
+
 
 	private void iterateFiles(String spcs) {
 		if(dir.isFile()){
@@ -363,19 +375,59 @@ public class SearchUI extends JFrame{
 		return imagePath;
 	}
 	
-	private void createImageBeans() throws IOException{
-		BufferedImage img = null;
-		for (int i = 0; i < imagePaths.size(); i++) {
+	/*public ArrayList<String> getImagePath(){
+		return imagePaths;
+	}*/
+	
+	
+	public void createImageBeans() throws IOException{
+		//BufferedImage img = null;
+		for (int i = 0; i < 10; i++) {
 			
 			String imageP = imagePaths.get(i);
 			Path p = Paths.get(imageP);
 			String file = p.getFileName().toString();
 			ImageBean images = new ImageBean(file, imageP, imageDB);
 			imageBeans.add(images);
+			//System.out.println(imageBeans.size());
 		}
+		//compareColor(query);
 	}
 	
-	
+	public void compareColor(ImageBean query){
+    	double similarity = 0;
+    	double max = 0;
+    	histogram1 = new Histogram();
+		histogram2 = new Histogram();
+		try{
+			for (int i=0; i< imagePaths.size();++i ){
+			String Path1 = query.getFilePath();
+			String Path2 = imagePaths.get(i);
+			System.out.println(Path2);
+			BufferedImage img1 = ImageIO.read(new File(Path1));
+			BufferedImage img2 = ImageIO.read(new File(Path2));
+			double[] histVal1 = histogram1.getHist(img1);
+			double[] histVal2 = histogram1.getHist(img2);
+			compare = new ColourHistCompare();
+			double distance;
+			distance = compare.calculateDistance(histVal1, histVal2);
+			similarity = 1- distance;
+			sortedPath.add(Path2);
+				if (similarity >= max){
+					sortedPath.add(i, Path2);
+					max = similarity;
+				}
+			System.out.println("Colour Histogram Similarity:");
+			System.out.println(similarity);
+			System.out.println(sortedPath);
+		}
+			//System.out.println(sortedPath);
+		}
+		catch (IOException e) {
+    	}
+	   	//return similarity;
+	   	
+    }
 	
 	private void printPictures() {
 		System.out.println("ImagePaths size: "+ imagePaths.size());
@@ -383,9 +435,9 @@ public class SearchUI extends JFrame{
 		System.out.println(imageBeans.get(0).getFileName());
 		System.out.println(imageBeans.get(1).getFilePath());
 		
-		for(int i = 0; i < imagePaths.size(); i++){
+		for(int i = 0; i < 10; i++){
 			
-			imagesJP.add(new JLabel(new ImageIcon(imagePaths.get(i))));
+			imagesJP.add(new JLabel(new ImageIcon(imagePaths.get(i)))); //change imagePaths to sortedPath
 			revalidate();
 			repaint();
 		}

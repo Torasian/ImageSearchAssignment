@@ -42,19 +42,20 @@ public class ImageBean {
 
     // private static ArrayList<ImageBean> BrowseBeans;
 
-    public ImageBean(String fileName, String filePath, BufferedImage imageInformation,
-            ImageDatabase imageDatabase) {
+    public ImageBean(String fileName, String filePath, BufferedImage imageInformation) {
         mImageInformation = imageInformation;
         mFilePath = filePath;
-        // System.out.print(mFilePath);
         mFileName = fileName;
-        mImageDatabase = imageDatabase;
         mFeatureToProbMap = new HashMap<>();
         intTags = new ArrayList<>();
     }
+    
+    public void setImageDatabase(ImageDatabase imageDatabase) {
+        mImageDatabase = imageDatabase;
+    }
 
     public String getFilePath() {
-        System.out.print(mFilePath);
+        if (SearchUI.DEBUG)System.out.print(mFilePath);
         return mFilePath;
     }
 
@@ -89,7 +90,7 @@ public class ImageBean {
     }
 
     public void initialize() {
-        extractFeature();
+        //extractFeature();
         extractColor();
         extractText();
     }
@@ -134,7 +135,7 @@ public class ImageBean {
             hist = new Histogram();
             histvalue = hist.getHist(img1);
             for (int i = 0; i < histvalue.length; i++) {
-                System.out.println(histvalue[i]);
+                if (SearchUI.DEBUG) System.out.println(histvalue[i]);
             }
         } catch (IOException e) {
         }
@@ -180,8 +181,8 @@ public class ImageBean {
             double distance;
             distance = compare.calculateDistance(histVal1, histVal2);
 
-            System.out.print("Colour Histogram Similarity value:");
-            System.out.println(1 - distance);
+            if (SearchUI.DEBUG) System.out.print("Colour Histogram Similarity value:");
+            if (SearchUI.DEBUG) System.out.println(1 - distance);
         } catch (IOException e) {
 
         }
@@ -195,7 +196,7 @@ public class ImageBean {
             for (int i = 0; i < 10; i++) {
                 String Path1 = query.getFilePath();
                 String Path2 = getFilePath();
-                System.out.println(Path2);
+                if (SearchUI.DEBUG)System.out.println(Path2);
                 BufferedImage img1 = ImageIO.read(new File(Path1));
                 BufferedImage img2 = ImageIO.read(new File(Path2));
                 double[] histVal1 = histogram1.getHist(img1);
@@ -204,8 +205,8 @@ public class ImageBean {
                 double distance;
                 distance = compare.calculateDistance(histVal1, histVal2);
                 similarity = 1 - distance;
-                System.out.println("Colour Histogram Similarity:");
-                System.out.println(similarity);
+                if (SearchUI.DEBUG)System.out.println("Colour Histogram Similarity:");
+                if (SearchUI.DEBUG)System.out.println(similarity);
             }
         } catch (IOException e) {
         }

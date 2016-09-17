@@ -68,6 +68,7 @@ public class ImageDatabase {
     
     private void extractBeans() {
         for (int i = 0; i < imageBeans.size(); ++i) {
+            imageBeans.get(i).setImageDatabase(this);
             imageBeans.get(i).initialize();
         }
     }
@@ -84,7 +85,7 @@ public class ImageDatabase {
     	if(!fileToListMap.containsKey(fileName)){
     		return new ArrayList<>();
     	}
-    	System.out.println(fileToListMap.get(fileName).toString());
+    	if (SearchUI.DEBUG)System.out.println(fileToListMap.get(fileName).toString());
     	return fileToListMap.get(fileName);
     }
     

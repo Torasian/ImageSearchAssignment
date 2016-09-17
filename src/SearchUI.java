@@ -38,6 +38,8 @@ public class SearchUI extends JFrame{
 	static final String[] EXTENSIONS = new String[]{
 			"jpg","gif", "png", "bmp" // and other formats you need
 	};
+	
+	public static boolean DEBUG = true;
 
 	static FilenameFilter IMAGE_FILTER;
 
@@ -129,10 +131,10 @@ public class SearchUI extends JFrame{
 				int state = e.getStateChange();
 				if( state == ItemEvent.SELECTED){
 					imageDB.setExtractColor(true);
-					System.out.println("Color Histogram selected");
+					if (DEBUG) System.out.println("Color Histogram selected");
 				} else{
 					imageDB.setExtractColor(false);
-					System.out.println("Color Histogram is Not selected");
+					if (DEBUG) System.out.println("Color Histogram is Not selected");
 				}
 			}
 		});
@@ -149,13 +151,13 @@ public class SearchUI extends JFrame{
 					deepJTB.setEnabled(false);
 					imageDB.setExtractFeature(true);
 					imageDB.setExtractColor(true);
-					System.out.println("both features are Selected");
+					if (DEBUG) System.out.println("both features are Selected");
 				} else{
 					histoJTB.setEnabled(true);
 					deepJTB.setEnabled(true);
 					imageDB.setExtractFeature(false);
 					imageDB.setExtractColor(false);
-					System.out.println("both features have been deselected");
+					if (DEBUG) System.out.println("both features have been deselected");
 				}
 			}
 		});
@@ -171,11 +173,11 @@ public class SearchUI extends JFrame{
 					imageDB.setExtractFeature(true);
 					imageDB.getSimilarImages(query);
 //					printPictures(imageDB.getSimilarImages(query));
-					System.out.println("Deep learning is Selected");
+					if (DEBUG) System.out.println("Deep learning is Selected");
 					scrollJSP.setVisible(true);
 				} else{
 					imageDB.setExtractFeature(false);
-					System.out.println("Deep learning is not selected");
+					if (DEBUG) System.out.println("Deep learning is not selected");
 				}
 			}
 		});
@@ -189,14 +191,14 @@ public class SearchUI extends JFrame{
 				int state = e.getStateChange();
 				if(state == ItemEvent.SELECTED){
 					imageDB.setExtractingText(true);
-					System.out.println(imageDB.getSimilarImages(query));
+					if (DEBUG) System.out.println(imageDB.getSimilarImages(query));
 					imageDB.getSimilarImages(query);
 //					printPictures(imageDB.getSimilarImages(query));
-					System.out.println("Text Extraction is selected");
+					if (DEBUG) System.out.println("Text Extraction is selected");
 					scrollJSP.setVisible(true);
 				} else {
 					imageDB.setExtractingText(false);
-					System.out.println("Text extraction is not selected");
+					if (DEBUG) System.out.println("Text extraction is not selected");
 				}
 			}
 		});
@@ -225,7 +227,7 @@ public class SearchUI extends JFrame{
 				browseImg = ImageIO.read(new File(imagePath));
 				Path p = Paths.get(imagePath);
 				String file = p.getFileName().toString();
-				query = new ImageBean(file, imagePath, (BufferedImage) browseImg, imageDB);
+				query = new ImageBean(file, imagePath, (BufferedImage) browseImg);
 				compareColor(query);
 				//ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
 				
@@ -258,7 +260,7 @@ public class SearchUI extends JFrame{
 	private void loadAllImages(String path) throws IOException{
 	    imagePaths.clear();
 		dir = new File(path);
-		System.out.println(path);
+		if (DEBUG) System.out.println(path);
 
 		spc_count++;
 		String spcs = "";
@@ -281,7 +283,7 @@ public class SearchUI extends JFrame{
 				    iterateDirectory(listOfFiles[i]);
 				}
 			} else {
-				System.out.println(spcs + " [ACCESS DENIED]");
+			    if (DEBUG) System.out.println(spcs + " [ACCESS DENIED]");
 			}
 		}
 		spc_count--;
@@ -315,7 +317,7 @@ public class SearchUI extends JFrame{
 				for (int i = 0; i < listOfFiles.length; i++)
 					iterateDirectory(listOfFiles[i]);
 			} else {
-				System.out.println(spcs + " [ACCESS DENIED]");
+			    if (DEBUG) System.out.println(spcs + " [ACCESS DENIED]");
 			}
 		}
 		spc_count--;
@@ -332,10 +334,10 @@ public class SearchUI extends JFrame{
 			Path p = Paths.get(imageP);
 			BufferedImage img = ImageIO.read(new File(imageP));
 			String file = p.getFileName().toString();
-			ImageBean images = new ImageBean(file, imageP, img, imageDB);
+			ImageBean images = new ImageBean(file, imageP, img);
 			imageBeans.add(images);
 		}
-		System.out.println(imageBeans.size());
+		if (DEBUG) System.out.println(imageBeans.size());
 		//compareColor(query);
 	}
 	
@@ -348,7 +350,7 @@ public class SearchUI extends JFrame{
 			for (int i=0; i< imagePaths.size();++i ){
 			String Path1 = query.getFilePath();
 			String Path2 = imagePaths.get(i);
-			System.out.println(Path2);
+			if (DEBUG) System.out.println(Path2);
 			BufferedImage img1 = ImageIO.read(new File(Path1));
 			BufferedImage img2 = ImageIO.read(new File(Path2));
 			double[] histVal1 = histogram1.getHist(img1);
@@ -358,13 +360,13 @@ public class SearchUI extends JFrame{
 			distance = compare.calculateDistance(histVal1, histVal2);
 			similarity = 1- distance;
 			sortedPath.add(Path2);
-				if (similarity >= max){
-					sortedPath.add(i, Path2);
-					max = similarity;
-				}
-			System.out.println("Colour Histogram Similarity:");
-			System.out.println(similarity);
-			System.out.println(sortedPath);
+			if (similarity >= max){
+				sortedPath.add(i, Path2);
+				max = similarity;
+			}
+			if (DEBUG) System.out.println("Colour Histogram Similarity:");
+			if (DEBUG) System.out.println(similarity);
+			if (DEBUG) System.out.println(sortedPath);
 		}
 			//System.out.println(sortedPath);
 		}
@@ -375,10 +377,10 @@ public class SearchUI extends JFrame{
     }
 	
 	private void printPictures() {
-		System.out.println("ImagePaths size: "+ imagePaths.size());
-		System.out.println("Imagebeans size: "+ imageBeans.size());
-		System.out.println(imageBeans.get(0).getFileName());
-		System.out.println(imageBeans.get(1).getFilePath());
+	    if (DEBUG) System.out.println("ImagePaths size: "+ imagePaths.size());
+	    if (DEBUG) System.out.println("Imagebeans size: "+ imageBeans.size());
+	    if (DEBUG) System.out.println(imageBeans.get(0).getFileName());
+	    if (DEBUG) System.out.println(imageBeans.get(1).getFilePath());
 		
 		for(int i = 0; i < 10; i++){
 			

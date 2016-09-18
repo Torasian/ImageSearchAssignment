@@ -39,7 +39,7 @@ public class SearchUI extends JFrame{
 			"jpg","gif", "png", "bmp" // and other formats you need
 	};
 	
-	public static boolean DEBUG = true;
+	public static boolean DEBUG = false;
 
 	static FilenameFilter IMAGE_FILTER;
 
@@ -122,8 +122,6 @@ public class SearchUI extends JFrame{
 	 * Creates an item listener event for when the histoColourJTB is selected
 	 */
 	private void histoColourJTBAction() {
-		ImageBean.ColourHistSimilarityCal();
-		//compareColor(query);
 		histoJTB.addItemListener(new ItemListener() {
 
 			@Override
@@ -348,26 +346,26 @@ public class SearchUI extends JFrame{
 		histogram2 = new Histogram();
 		try{
 			for (int i=0; i< imagePaths.size();++i ){
-			String Path1 = query.getFilePath();
-			String Path2 = imagePaths.get(i);
-			if (DEBUG) System.out.println(Path2);
-			BufferedImage img1 = ImageIO.read(new File(Path1));
-			BufferedImage img2 = ImageIO.read(new File(Path2));
-			double[] histVal1 = histogram1.getHist(img1);
-			double[] histVal2 = histogram1.getHist(img2);
-			compare = new ColourHistCompare();
-			double distance;
-			distance = compare.calculateDistance(histVal1, histVal2);
-			similarity = 1- distance;
-			sortedPath.add(Path2);
-			if (similarity >= max){
-				sortedPath.add(i, Path2);
-				max = similarity;
-			}
-			if (DEBUG) System.out.println("Colour Histogram Similarity:");
-			if (DEBUG) System.out.println(similarity);
-			if (DEBUG) System.out.println(sortedPath);
-		}
+    			String Path1 = query.getFilePath();
+    			String Path2 = imagePaths.get(i);
+    			if (DEBUG) System.out.println(Path2);
+    			BufferedImage img1 = ImageIO.read(new File(Path1));
+    			BufferedImage img2 = ImageIO.read(new File(Path2));
+    			double[] histVal1 = histogram1.getHist(img1);
+    			double[] histVal2 = histogram1.getHist(img2);
+    			compare = new ColourHistCompare();
+    			double distance;
+    			distance = compare.calculateDistance(histVal1, histVal2);
+    			similarity = 1 - distance;
+    			sortedPath.add(Path2);
+    			if (similarity >= max){
+    				sortedPath.add(i, Path2);
+    				max = similarity;
+    			}
+    			if (DEBUG) System.out.println("Colour Histogram Similarity:");
+    			if (DEBUG) System.out.println(similarity);
+    			if (DEBUG) System.out.println(sortedPath);
+    		}
 			//System.out.println(sortedPath);
 		}
 		catch (IOException e) {

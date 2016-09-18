@@ -1,16 +1,21 @@
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -29,18 +34,11 @@ public class ImageBean {
     private ImageDatabase mImageDatabase;
     private ArrayList<String> tags;
     private ArrayList<Integer> intTags;
+    private double[] mHistValues;
     private String mFilePath;
     private String mFileName;
-
-    private static Histogram hist;
+    
     public double simValue;
-    private SearchUI Search;
-    private ArrayList<Double> distanceVal;
-    private static Histogram histogram1;
-    private static Histogram histogram2;
-    private static ColourHistCompare compare;
-
-    // private static ArrayList<ImageBean> BrowseBeans;
 
     public ImageBean(String fileName, String filePath, BufferedImage imageInformation) {
         mImageInformation = imageInformation;
@@ -66,6 +64,10 @@ public class ImageBean {
     public Map<String, Double> getFeatureMap() {
         return mFeatureToProbMap;
     }
+    
+    public double[] getColorHist() {
+        return mHistValues;
+    }
 
     /**
      * Given the information for the image's color features and other extracted
@@ -75,7 +77,7 @@ public class ImageBean {
     public void calculateSimilarity(ImageBean query) {
         double similarityValue = 0;
         if (mImageDatabase.isExtractingColor()) {
-            // similarityValue += compareColor(query);
+            similarityValue += compareColor(query);
         }
 
         if (mImageDatabase.isExtractingFeature()) {
@@ -120,7 +122,12 @@ public class ImageBean {
                 mFeatureToProbMap.put(tag.getName(), tag.getProbability());
             }
         }
-        saveFeatureMap(mFileName, mFeatureToProbMap);
+        
+        try {
+            saveFeatureMap(mFileName, mFeatureToProbMap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void extractText() {
@@ -134,21 +141,14 @@ public class ImageBean {
     }
 
     public void extractColor() {
-        double[] histvalue;
-        String path = getFilePath();
-        try {
-            BufferedImage img1 = ImageIO.read(new File(path));
-            hist = new Histogram();
-            histvalue = hist.getHist(img1);
-            for (int i = 0; i < histvalue.length; i++) {
-                if (SearchUI.DEBUG) System.out.println(histvalue[i]);
-            }
-        } catch (IOException e) {
+        Histogram hist = new Histogram();
+        mHistValues = hist.getHist(mImageInformation);
+        for (int i = 0; i < mHistValues.length; i++) {
+            if (SearchUI.DEBUG) System.out.println(mHistValues[i]);
         }
     }
     
     private boolean isExtracted(String fileName) {
-        boolean isExtracted = false;
         String filePath = Utils.getFeaturePath(fileName).toString();
         File f = new File(filePath);
         return f.exists() && !f.isDirectory();
@@ -156,11 +156,33 @@ public class ImageBean {
     
     private Map<String, Double> getExtractedFeatureList(String fileName) {
         Map<String, Double> featureMap = new HashMap<>();
+        List<String> list = new ArrayList<>();
+        String filePath = Utils.getFeaturePath(fileName).toString();
+        
+        try (BufferedReader br = Files.newBufferedReader(Paths.get(filePath))) {
+            list = br.lines().collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        for (String line : list) {
+            String[] featureAndProb = line.split("##");
+            String feature = featureAndProb[0];
+            double prob = Double.parseDouble(featureAndProb[1]);
+            featureMap.put(feature, prob);
+        }
         return featureMap;
     }
     
-    private void saveFeatureMap(String fileName, Map<String, Double> featureMap) {
-        
+    private void saveFeatureMap(String fileName, Map<String, Double> featureMap) throws IOException {
+        String filePath = Utils.getFeaturePath(fileName).toString();
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath), 
+                StandardCharsets.UTF_8)) {
+            for (String key : featureMap.keySet()) {
+                double prob = featureMap.get(key);
+                writer.write(key + "##" + prob);
+            }
+        }
     }
 
     /**
@@ -186,54 +208,20 @@ public class ImageBean {
         return similarity;
     }
 
-    public static void ColourHistSimilarityCal() {
-        try {
-            BufferedImage img1 = ImageIO
-                    .read(new File(
-                            "/Users/Admin/Documents/NUS/Sem-1-2016-17/CS2108/Assignment/ImageSeach_demo/dataset/0028_1070815604.jpg"));
-            BufferedImage img2 = ImageIO
-                    .read(new File(
-                            "/Users/Admin/Documents/NUS/Sem-1-2016-17/CS2108/Assignment/ImageSeach_demo/dataset/0030_1091560018.jpg"));
-            histogram1 = new Histogram();
-            histogram2 = new Histogram();
-            double[] histVal1 = histogram1.getHist(img1);
-            double[] histVal2 = histogram2.getHist(img2);
-            compare = new ColourHistCompare();
-            double distance;
-            distance = compare.calculateDistance(histVal1, histVal2);
-
-            if (SearchUI.DEBUG) System.out.print("Colour Histogram Similarity value:");
-            if (SearchUI.DEBUG) System.out.println(1 - distance);
-        } catch (IOException e) {
-
-        }
-    }
-
-    public void compareColor(ImageBean query) {
+    public double compareColor(ImageBean query) {
         double similarity = 0;
-        histogram1 = new Histogram();
-        histogram2 = new Histogram();
-        try {
-            for (int i = 0; i < 10; i++) {
-                String Path1 = query.getFilePath();
-                String Path2 = getFilePath();
-                if (SearchUI.DEBUG)System.out.println(Path2);
-                BufferedImage img1 = ImageIO.read(new File(Path1));
-                BufferedImage img2 = ImageIO.read(new File(Path2));
-                double[] histVal1 = histogram1.getHist(img1);
-                double[] histVal2 = histogram1.getHist(img2);
-                compare = new ColourHistCompare();
-                double distance;
-                distance = compare.calculateDistance(histVal1, histVal2);
-                similarity = 1 - distance;
-                if (SearchUI.DEBUG)System.out.println("Colour Histogram Similarity:");
-                if (SearchUI.DEBUG)System.out.println(similarity);
-            }
-        } catch (IOException e) {
-        }
-        // System.out.println(similarity); //return similarity;
+        double[] queryHist = query.getColorHist();
+        double[] imageHist = mHistValues;
+        ColourHistCompare histCompare = new ColourHistCompare();
+        double distance;
+        distance = histCompare.calculateDistance(queryHist, imageHist);
+        similarity = 1 - distance;
+        
+        if (SearchUI.DEBUG)System.out.println("Colour Histogram Similarity:");
+        if (SearchUI.DEBUG)System.out.println(similarity);
+        
+        return similarity;
     }
-
     
     private ArrayList<Integer> getIntTags() {
         return intTags;

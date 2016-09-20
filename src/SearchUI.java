@@ -234,8 +234,9 @@ public class SearchUI extends JFrame{
 	    for(int i = 0; i < sims.size(); i++){
             imagesJP.add(new JLabel(new ImageIcon(sims.get(i).getFilePath())));
             revalidate();
-            repaint();
+            repaint();            
         }
+	    scrollJSP.setVisible(true);
 	}
 
 	private void browseButtonAction() {
@@ -264,8 +265,8 @@ public class SearchUI extends JFrame{
 				query = new ImageBean(file, imagePath, (BufferedImage) browseImg);
 				query.setImageDatabase(imageDB);
 				query.initialize();
-				refreshImages();
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
+				refreshImages();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}

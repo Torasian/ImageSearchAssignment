@@ -226,7 +226,7 @@ public class SearchUI extends JFrame{
 	    }
 	    ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
 	    
-	    imagesJP = new JPanel(new WrapLayout());
+	    imagesJP.removeAll();
 	    for(int i = 0; i < sims.size(); i++){
             imagesJP.add(new JLabel(new ImageIcon(sims.get(i).getFilePath())));
             revalidate();

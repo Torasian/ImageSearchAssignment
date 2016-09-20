@@ -152,7 +152,7 @@ public class ImageDatabase {
     	for (ImageBean imageBean : imageBeans) {
 			imageBean.calculateSimilarity(query);
 		}
-		imageBeans.sort((s1, s2) -> (int) (s2.simValue - s1.simValue));
+		imageBeans.sort((s1, s2) -> compareTo(s1.simValue, s2.simValue));
 		
 		ArrayList<ImageBean> simImages = new ArrayList<>();
 		
@@ -160,7 +160,6 @@ public class ImageDatabase {
 			simImages.add(imageBeans.get(i));
 		}
 		return simImages;
-		
     }
     
     public ArrayList<String> getAllWords(Map<String, ArrayList<String>> fileToTagsMap) {
@@ -176,5 +175,11 @@ public class ImageDatabase {
         ArrayList<String> allTags = new ArrayList<>(allTagsSet);
         Collections.sort(allTags);
         return allTags;
+    }
+    
+    private int compareTo(double sim1, double sim2) {
+        int intSim1 = (int)(sim1 * 1000);
+        int intSim2 = (int)(sim2 * 1000);
+        return intSim2 - intSim1;
     }
 }

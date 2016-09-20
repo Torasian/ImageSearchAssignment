@@ -228,7 +228,9 @@ public class SearchUI extends JFrame{
 	    
 	    imagesJP.removeAll();
 	    for(int i = 0; i < sims.size(); i++){
-            imagesJP.add(new JLabel(new ImageIcon(sims.get(i).getFilePath())));
+	        ImageBean bean = sims.get(i);
+	        System.out.println(bean.getFileName() + " " + bean.simValue);
+            imagesJP.add(new JLabel(new ImageIcon(bean.getFilePath())));
             revalidate();
             repaint();            
         }

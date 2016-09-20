@@ -227,6 +227,7 @@ public class SearchUI extends JFrame{
 	    ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
 	    
 	    imagesJP.removeAll();
+	    scrollJSP.setVisible(true);
 	    for(int i = 0; i < sims.size(); i++){
 	        ImageBean bean = sims.get(i);
 	        System.out.println(bean.getFileName() + " " + bean.simValue);
@@ -234,7 +235,6 @@ public class SearchUI extends JFrame{
             revalidate();
             repaint();            
         }
-	    scrollJSP.setVisible(true);
 	}
 
 	private void browseButtonAction() {

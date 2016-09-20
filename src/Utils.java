@@ -27,7 +27,7 @@ public class Utils {
     
     public static Path getFeaturePath(String fileName) {
         Path currentRelativePath = getRelativePath();
-        currentRelativePath = currentRelativePath.resolve("feature");
+        currentRelativePath = currentRelativePath.resolve("features");
         if (fileName == null || fileName.isEmpty()) {
             throw new IllegalArgumentException("filename is invalid");
         }

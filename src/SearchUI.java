@@ -28,7 +28,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.SpringLayout;
 
-
 public class SearchUI extends JFrame{
 
 	// File representing the folder that you select using a FileChooser
@@ -226,10 +225,6 @@ public class SearchUI extends JFrame{
 	        return;
 	    }
 	    ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
-	    //compareColor(query);
-	    
-        //textJTBAction(query);
-        //deepLearningJTBAction(query);
 	    
 	    for(int i = 0; i < sims.size(); i++){
             imagesJP.add(new JLabel(new ImageIcon(sims.get(i).getFilePath())));

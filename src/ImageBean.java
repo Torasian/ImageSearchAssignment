@@ -92,7 +92,7 @@ public class ImageBean {
     }
 
     public void initialize() {
-        //extractFeature();
+        extractFeature();
         extractColor();
         extractText();
     }
@@ -102,8 +102,9 @@ public class ImageBean {
      */
     public void extractFeature() {
         mFeatureToProbMap.clear();
-        if (isExtracted(mFileName)) {
-            mFeatureToProbMap = getExtractedFeatureList(mFileName);
+        String fileName = getTextFileName(mFileName);
+        if (isExtracted(fileName)) {
+            mFeatureToProbMap = getExtractedFeatureList(fileName);
             return;
         }
         
@@ -124,7 +125,7 @@ public class ImageBean {
         }
         
         try {
-            saveFeatureMap(mFileName, mFeatureToProbMap);
+            saveFeatureMap(fileName, mFeatureToProbMap);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -146,6 +147,10 @@ public class ImageBean {
         for (int i = 0; i < mHistValues.length; i++) {
             if (SearchUI.DEBUG) System.out.println(mHistValues[i]);
         }
+    }
+    
+    private String getTextFileName(String fileName) {
+        return fileName.replace(".jpg", ".txt");
     }
     
     private boolean isExtracted(String fileName) {
@@ -180,7 +185,7 @@ public class ImageBean {
                 StandardCharsets.UTF_8)) {
             for (String key : featureMap.keySet()) {
                 double prob = featureMap.get(key);
-                writer.write(key + "##" + prob);
+                writer.write(key + "##" + prob + "\n");
             }
         }
     }

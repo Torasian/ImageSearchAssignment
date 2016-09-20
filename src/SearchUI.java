@@ -64,7 +64,9 @@ public class SearchUI extends JFrame{
 	private static ColourHistCompare compare;
 	private ArrayList<String> sortedPath = new ArrayList<>();
 	
-	public SearchUI() throws IOException{
+	public SearchUI() throws IOException {
+	    System.out.println("Started");
+	    
 		browseJB = new JButton("Browse:");
 		browseJL = new JLabel("");
 
@@ -79,9 +81,13 @@ public class SearchUI extends JFrame{
 		imagesJP = new JPanel(new WrapLayout());
 		scrollJSP = new JScrollPane(imagesJP);
 
+		System.out.println("Loading images");
 		loadAllImages(Utils.getTestPath("data").toString());
+		
+		System.out.println("Extracting images");
 		imageDB = new ImageDatabase(imageBeans);
 		
+		System.out.println("Ready");
 		initialise();
 	}
 
@@ -108,11 +114,10 @@ public class SearchUI extends JFrame{
 		getContentPane().add(scrollJSP);
 		scrollJSP.setVisible(false);
 
-		loadAllAction();
+		loadAllAction();		
 		browseButtonAction();
-		bothJTBAction();
-		
 		histoColourJTBAction();
+		bothJTBAction();
 		
 		this.pack();
 		this.setVisible(true);
@@ -127,18 +132,25 @@ public class SearchUI extends JFrame{
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				int state = e.getStateChange();
-				if( state == ItemEvent.SELECTED){
+				if(state == ItemEvent.SELECTED){
 					imageDB.setExtractColor(true);
 					if (DEBUG) System.out.println("Color Histogram selected");
 				} else{
 					imageDB.setExtractColor(false);
 					if (DEBUG) System.out.println("Color Histogram is Not selected");
 				}
+				refreshImages();
 			}
 		});
 	}
 
 	private void bothJTBAction() {
+	    histoJTB.setEnabled(false);
+        deepJTB.setEnabled(false);
+        textJTB.setEnabled(false);
+        imageDB.setExtractFeature(true);
+        imageDB.setExtractColor(true);
+        imageDB.setExtractingText(true);
 		bothJTB.addItemListener(new ItemListener() {
 
 			@Override
@@ -147,16 +159,21 @@ public class SearchUI extends JFrame{
 				if(state== ItemEvent.SELECTED){
 					histoJTB.setEnabled(false);
 					deepJTB.setEnabled(false);
+					textJTB.setEnabled(false);
 					imageDB.setExtractFeature(true);
 					imageDB.setExtractColor(true);
-					if (DEBUG) System.out.println("both features are Selected");
+					imageDB.setExtractingText(true);
+					if (DEBUG) System.out.println("All features are Selected");
 				} else{
 					histoJTB.setEnabled(true);
 					deepJTB.setEnabled(true);
+					textJTB.setEnabled(true);
 					imageDB.setExtractFeature(false);
 					imageDB.setExtractColor(false);
-					if (DEBUG) System.out.println("both features have been deselected");
+					imageDB.setExtractingText(false);
+					if (DEBUG) System.out.println("All features have been deselected");
 				}
+				refreshImages();
 			}
 		});
 	}
@@ -170,13 +187,14 @@ public class SearchUI extends JFrame{
 				if(state== ItemEvent.SELECTED){
 					imageDB.setExtractFeature(true);
 					imageDB.getSimilarImages(query);
-//					printPictures(imageDB.getSimilarImages(query));
+					//printPictures(imageDB.getSimilarImages(query));
 					if (DEBUG) System.out.println("Deep learning is Selected");
 					scrollJSP.setVisible(true);
 				} else{
 					imageDB.setExtractFeature(false);
 					if (DEBUG) System.out.println("Deep learning is not selected");
 				}
+				refreshImages();
 			}
 		});
 	}
@@ -198,8 +216,26 @@ public class SearchUI extends JFrame{
 					imageDB.setExtractingText(false);
 					if (DEBUG) System.out.println("Text extraction is not selected");
 				}
+				refreshImages();
 			}
 		});
+	}
+	
+	private void refreshImages() {
+	    if (query == null) {
+	        return;
+	    }
+	    ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
+	    //compareColor(query);
+	    
+        //textJTBAction(query);
+        //deepLearningJTBAction(query);
+	    
+	    for(int i = 0; i < sims.size(); i++){
+            imagesJP.add(new JLabel(new ImageIcon(sims.get(i).getFilePath())));
+            revalidate();
+            repaint();
+        }
 	}
 
 	private void browseButtonAction() {
@@ -226,12 +262,9 @@ public class SearchUI extends JFrame{
 				Path p = Paths.get(imagePath);
 				String file = p.getFileName().toString();
 				query = new ImageBean(file, imagePath, (BufferedImage) browseImg);
-				compareColor(query);
-				//ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
-				
-				//textJTBAction(query);
-				//deepLearningJTBAction(query);
-				
+				query.setImageDatabase(imageDB);
+				query.initialize();
+				refreshImages();
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -381,7 +414,6 @@ public class SearchUI extends JFrame{
 	    if (DEBUG) System.out.println(imageBeans.get(1).getFilePath());
 		
 		for(int i = 0; i < 10; i++){
-			
 			imagesJP.add(new JLabel(new ImageIcon(imagePaths.get(i)))); //change imagePaths to sortedPath
 			revalidate();
 			repaint();

@@ -14,9 +14,9 @@ import java.util.Set;
  * Class used to store Image Information
  */
 public class ImageDatabase {
-    private boolean mIsExtractingColor;
-    private boolean mIsExtractingFeature;
-    private boolean mIsExtractingText;
+    private boolean mIsExtractingColor = true;
+    private boolean mIsExtractingFeature = true;
+    private boolean mIsExtractingText = true;
     private ArrayList<String> allWords;
     private Map<String, ArrayList<String>> fileToListMap;
     private ArrayList<ImageBean> imageBeans;
@@ -50,8 +50,8 @@ public class ImageDatabase {
         mIsExtractingFeature = isExtractingFeature;
     }
     
-    public void setExtractColor(boolean isExtractingFeature){
-        mIsExtractingFeature = isExtractingFeature;
+    public void setExtractColor(boolean isExtractingColor){
+        mIsExtractingColor = isExtractingColor;
     }
     
     public void setExtractingText(boolean isExtractingText) {

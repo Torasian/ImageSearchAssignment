@@ -39,6 +39,10 @@ public class ImageBean {
     private String mFileName;
     
     public double simValue;
+    double topHalf ;
+    double bottomHalf;
+    double querySquared ;
+    double currentSquared;
 
     public ImageBean(String fileName, String filePath, BufferedImage imageInformation) {
         mImageInformation = imageInformation;
@@ -100,7 +104,7 @@ public class ImageBean {
     /**
      * https://github.com/Clarifai/clarifai-java
      */
-    public void extractFeature() {
+    private void extractFeature() {
         mFeatureToProbMap.clear();
         String fileName = getTextFileName(mFileName);
         if (isExtracted(fileName)) {
@@ -131,7 +135,7 @@ public class ImageBean {
         }
     }
 
-    public void extractText() {
+    private void extractText() {
         tags = mImageDatabase.getTagsForFileName(mFileName);
         Map<String, ArrayList<String>> getFiletoTagList = mImageDatabase
                 .getFileToTagListMap();
@@ -141,7 +145,7 @@ public class ImageBean {
         intTags = mImageDatabase.getVectorForTags(tags, allWords);
     }
 
-    public void extractColor() {
+    private void extractColor() {
         Histogram hist = new Histogram();
         mHistValues = hist.getHist(mImageInformation);
         for (int i = 0; i < mHistValues.length; i++) {
@@ -200,7 +204,7 @@ public class ImageBean {
      * doesn't appear in both and has probability < 90 (exclude) sky appears in
      * both, but one of the probability < 90 (exclude)
      */
-    private double compareFeature(ImageBean query) {
+    public double compareFeature(ImageBean query) {
         double similarity = 0;
         Map<String, Double> map = query.getFeatureMap();
         for (String object : map.keySet()) {
@@ -213,7 +217,7 @@ public class ImageBean {
         return similarity;
     }
 
-    public double compareColor(ImageBean query) {
+    private double compareColor(ImageBean query) {
         double similarity = 0;
         double[] queryHist = query.getColorHist();
         double[] imageHist = mHistValues;
@@ -234,7 +238,7 @@ public class ImageBean {
 
     
     private double compareText(ImageBean query) {
-        double similarity = 0;
+        double similarity = 0.0;
         ArrayList<Integer> queryVector = query.getIntTags();
         ArrayList<Integer> currentVector = intTags;
 
@@ -242,14 +246,22 @@ public class ImageBean {
             return 0;
         }
 
-        for (int i = 0; i < queryVector.size(); ++i) {
-            int topHalf = queryVector.get(i) * currentVector.get(i);
+        /*for (int i = 0; i < queryVector.size(); ++i) {
+            double topHalf = queryVector.get(i) * currentVector.get(i);
             int querySquared = queryVector.get(i) * queryVector.get(i);
             int currentSquared = currentVector.get(i) * currentVector.get(i);
             double bottomHalf = Math.sqrt(querySquared * currentSquared);
             similarity += bottomHalf;
 
+        }*/
+
+        for (int i=0; i<queryVector.size(); i++){
+        	topHalf +=  queryVector.get(i) * currentVector.get(i) *1.0;
+        	 querySquared += queryVector.get(i) * queryVector.get(i) *1.0;
+             currentSquared += currentVector.get(i) * currentVector.get(i) *1.0;
         }
+        bottomHalf = Math.sqrt(querySquared * currentSquared);
+        similarity = topHalf/bottomHalf;
         return similarity;
     }
 }

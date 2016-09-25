@@ -116,6 +116,8 @@ public class SearchUI extends JFrame{
 		loadAllAction();		
 		browseButtonAction();
 		histoColourJTBAction();
+		deepLearningJTBAction(query);
+		textJTBAction(query);
 		bothJTBAction();
 		
 		this.pack();
@@ -185,10 +187,10 @@ public class SearchUI extends JFrame{
 				int state = e.getStateChange();
 				if(state== ItemEvent.SELECTED){
 					imageDB.setExtractFeature(true);
-					imageDB.getSimilarImages(query);
+					//imageDB.getSimilarImages(query);
 					//printPictures(imageDB.getSimilarImages(query));
 					if (DEBUG) System.out.println("Deep learning is Selected");
-					scrollJSP.setVisible(true);
+					//scrollJSP.setVisible(true);
 				} else{
 					imageDB.setExtractFeature(false);
 					if (DEBUG) System.out.println("Deep learning is not selected");
@@ -207,10 +209,10 @@ public class SearchUI extends JFrame{
 				if(state == ItemEvent.SELECTED){
 					imageDB.setExtractingText(true);
 					if (DEBUG) System.out.println(imageDB.getSimilarImages(query));
-					imageDB.getSimilarImages(query);
+					//imageDB.getSimilarImages(query);
 //					printPictures(imageDB.getSimilarImages(query));
 					if (DEBUG) System.out.println("Text Extraction is selected");
-					scrollJSP.setVisible(true);
+					//scrollJSP.setVisible(true);
 				} else {
 					imageDB.setExtractingText(false);
 					if (DEBUG) System.out.println("Text extraction is not selected");
@@ -264,12 +266,14 @@ public class SearchUI extends JFrame{
 				query.setImageDatabase(imageDB);
 				query.initialize();
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
-				refreshImages();
+				//refreshImages();
+	            revalidate();
+	            repaint();   
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 			browseJL.setIcon(new ImageIcon(browseImg));
-			compareColor(query);
+			//compareColor(query);
 		}
 	}
 
@@ -371,7 +375,7 @@ public class SearchUI extends JFrame{
 		//compareColor(query);
 	}
 	
-	public void compareColor(ImageBean query){
+/*	public void compareColor(ImageBean query){
     	double similarity = 0;
     	double max = 0;
     	histogram1 = new Histogram();
@@ -404,7 +408,7 @@ public class SearchUI extends JFrame{
     	}
 	   	//return similarity;
 	   	
-    }
+    }*/
 	
 	private void printPictures() {
 	    if (DEBUG) System.out.println("ImagePaths size: "+ imagePaths.size());

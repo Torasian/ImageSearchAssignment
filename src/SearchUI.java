@@ -115,8 +115,10 @@ public class SearchUI extends JFrame{
 
 		loadAllAction();		
 		browseButtonAction();
+		deepLearningJTBAction();
 		histoColourJTBAction();
 		bothJTBAction();
+		textJTBAction();
 		
 		this.pack();
 		this.setVisible(true);
@@ -177,7 +179,7 @@ public class SearchUI extends JFrame{
 		});
 	}
 
-	private void deepLearningJTBAction(ImageBean query) {
+	private void deepLearningJTBAction() {
 		deepJTB.addItemListener(new ItemListener() {
 
 			@Override
@@ -185,8 +187,6 @@ public class SearchUI extends JFrame{
 				int state = e.getStateChange();
 				if(state== ItemEvent.SELECTED){
 					imageDB.setExtractFeature(true);
-					imageDB.getSimilarImages(query);
-					//printPictures(imageDB.getSimilarImages(query));
 					if (DEBUG) System.out.println("Deep learning is Selected");
 					scrollJSP.setVisible(true);
 				} else{
@@ -198,7 +198,7 @@ public class SearchUI extends JFrame{
 		});
 	}
 	
-	private void textJTBAction(ImageBean query) {
+	private void textJTBAction() {
 		textJTB.addItemListener(new ItemListener() {
 			
 			@Override
@@ -206,11 +206,11 @@ public class SearchUI extends JFrame{
 				int state = e.getStateChange();
 				if(state == ItemEvent.SELECTED){
 					imageDB.setExtractingText(true);
-					if (DEBUG) System.out.println(imageDB.getSimilarImages(query));
-					imageDB.getSimilarImages(query);
+//					if (DEBUG) System.out.println(imageDB.getSimilarImages(query));
+//					imageDB.getSimilarImages(query);
 //					printPictures(imageDB.getSimilarImages(query));
 					if (DEBUG) System.out.println("Text Extraction is selected");
-					scrollJSP.setVisible(true);
+//					scrollJSP.setVisible(true);
 				} else {
 					imageDB.setExtractingText(false);
 					if (DEBUG) System.out.println("Text extraction is not selected");

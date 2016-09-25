@@ -156,7 +156,7 @@ public class ImageDatabase {
 		
 		ArrayList<ImageBean> simImages = new ArrayList<>();
 		
-		for (int i = 0; i < 10 && i < imageBeans.size(); i++) {
+		for (int i = 0; i < 15 && i < imageBeans.size(); i++) {
 			simImages.add(imageBeans.get(i));
 		}
 		return simImages;

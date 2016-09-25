@@ -140,6 +140,8 @@ public class SearchUI extends JFrame{
 					imageDB.setExtractColor(false);
 					if (DEBUG) System.out.println("Color Histogram is Not selected");
 				}
+				
+				F1Calculation();
 				refreshImages();
 			}
 		});
@@ -174,6 +176,8 @@ public class SearchUI extends JFrame{
 					imageDB.setExtractingText(false);
 					if (DEBUG) System.out.println("All features have been deselected");
 				}
+				
+				F1Calculation();
 				refreshImages();
 			}
 		});
@@ -195,6 +199,8 @@ public class SearchUI extends JFrame{
 					imageDB.setExtractFeature(false);
 					if (DEBUG) System.out.println("Deep learning is not selected");
 				}
+				
+				F1Calculation();
 				refreshImages();
 			}
 		});
@@ -217,6 +223,8 @@ public class SearchUI extends JFrame{
 					imageDB.setExtractingText(false);
 					if (DEBUG) System.out.println("Text extraction is not selected");
 				}
+				
+				F1Calculation();
 				refreshImages();
 			}
 		});
@@ -239,6 +247,28 @@ public class SearchUI extends JFrame{
         }
 	}
 
+	private void F1Calculation(){
+	    if (query == null) {
+	        return;
+	    }
+	    ArrayList<ImageBean> sims = imageDB.getSimilarImages(query);
+	   
+	    ArrayList<ImageBean> Allsims = imageDB.getAllSimilarImages(query);
+	   
+	    
+	    int sizesims = sims.size();
+	    int sizeAllsims = Allsims.size();
+	    
+	    //assuming top 16 photo is relevant and all 16 are retrieved
+	    
+	    double precision = sizesims * 1.0/sizeAllsims;  //relevant/total retrieved
+	    double recall = sizesims * 1.0/sizesims;    //relevant / relevant 
+	    double F1 = 2*precision *recall / (precision + recall);
+	   
+	   
+	    System.out.println("F1 score: " + F1);
+	}
+	
 	private void browseButtonAction() {
 		//opens and loads an image when the browse button is pressed
 		browseJB.addActionListener(new ActionListener() {

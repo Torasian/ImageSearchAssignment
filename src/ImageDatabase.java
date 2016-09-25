@@ -163,6 +163,33 @@ public class ImageDatabase {
 		return simImages;
     }
     
+    
+    
+    
+    public ArrayList<ImageBean> getAllSimilarImages(ImageBean query){
+    	if(imageBeans == null || imageBeans.isEmpty()){
+    		return new ArrayList<>();
+    	}
+    	
+    	for (ImageBean imageBean : imageBeans) {
+			imageBean.calculateSimilarity(query);
+		}
+		imageBeans.sort((s1, s2) -> compareTo(s1.simValue, s2.simValue));
+		
+		ArrayList<ImageBean> simImages = new ArrayList<>();
+
+		
+		for (int i = 0; i < imageBeans.size(); i++) {
+			double sim = imageBeans.get(i).simValue;
+			if (sim >0)
+			simImages.add(imageBeans.get(i));
+		}
+		return simImages;
+    }
+    
+    
+    
+    
     public ArrayList<String> getAllWords(Map<String, ArrayList<String>> fileToTagsMap) {
         Set<String> allTagsSet = new HashSet<>(); 
         for (String fileName : fileToTagsMap.keySet()) {

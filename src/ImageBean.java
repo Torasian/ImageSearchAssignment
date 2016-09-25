@@ -205,6 +205,7 @@ public class ImageBean {
      * both, but one of the probability < 90 (exclude)
      */
     public double compareFeature(ImageBean query) {
+    	int count =0;
         double similarity = 0;
         Map<String, Double> map = query.getFeatureMap();
         for (String object : map.keySet()) {
@@ -212,9 +213,11 @@ public class ImageBean {
                 double currentProb = mFeatureToProbMap.get(object);
                 double queryProb = map.get(object);
                 similarity += Math.min(currentProb, queryProb);
+                count ++;
             }
         }
-        return similarity;
+        double similarity_new = similarity/count;
+        return similarity_new;
     }
 
     private double compareColor(ImageBean query) {

@@ -155,8 +155,9 @@ public class ImageDatabase {
 		imageBeans.sort((s1, s2) -> compareTo(s1.simValue, s2.simValue));
 		
 		ArrayList<ImageBean> simImages = new ArrayList<>();
+
 		
-		for (int i = 0; i < 15 && i < imageBeans.size(); i++) {
+		for (int i = 0; i < 16 && i < imageBeans.size(); i++) {
 			simImages.add(imageBeans.get(i));
 		}
 		return simImages;

@@ -108,7 +108,7 @@ public class SearchUI extends JFrame{
 		optionJP.add(deepJTB);
 		optionJP.add(textJTB);
 		optionJP.add(bothJTB);
-		optionJP.add(loadAllJB);
+//		optionJP.add(loadAllJB);
 
 		getContentPane().add(scrollJSP);
 		scrollJSP.setVisible(false);

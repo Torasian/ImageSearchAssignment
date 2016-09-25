@@ -234,22 +234,38 @@ public class ImageBean {
 
     
     private double compareText(ImageBean query) {
-        double similarity = 0;
+        double similarity = 0.0;
+        double topHalf = 0.0;
+        double querySquared = 0.0;
+        double currentSquared = 0.0;
+        double bottomHalf = 0.0;
+        
         ArrayList<Integer> queryVector = query.getIntTags();
         ArrayList<Integer> currentVector = intTags;
 
         if (queryVector.size() != currentVector.size()) {
             return 0;
         }
-
+        //cosine similarity
         for (int i = 0; i < queryVector.size(); ++i) {
-            int topHalf = queryVector.get(i) * currentVector.get(i);
-            int querySquared = queryVector.get(i) * queryVector.get(i);
-            int currentSquared = currentVector.get(i) * currentVector.get(i);
-            double bottomHalf = Math.sqrt(querySquared * currentSquared);
-            similarity += bottomHalf;
-
+        	if(queryVector.get(i) == 0 && currentVector.get(i) == 0 ){
+        		similarity += 0;
+        	} else if(queryVector.get(i)==0) {
+        		similarity += 0;
+        	} else if(currentVector.get(i) == 0){
+        		similarity +=0;
+        	} else{
+        		  topHalf = queryVector.get(i) * currentVector.get(i);
+                  querySquared = queryVector.get(i) * queryVector.get(i);
+                  currentSquared = currentVector.get(i) * currentVector.get(i);
+                  bottomHalf = Math.sqrt(querySquared * currentSquared);
+                 
+        	}
+        	
         }
+        
+        similarity = topHalf/bottomHalf;
+        
         return similarity;
     }
 }

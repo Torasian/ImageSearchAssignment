@@ -146,12 +146,12 @@ public class SearchUI extends JFrame{
 	}
 
 	private void bothJTBAction() {
-	    histoJTB.setEnabled(false);
-        deepJTB.setEnabled(false);
-        textJTB.setEnabled(false);
-        imageDB.setExtractFeature(true);
-        imageDB.setExtractColor(true);
-        imageDB.setExtractingText(true);
+//	    histoJTB.setEnabled(false);
+//        deepJTB.setEnabled(false);
+//        textJTB.setEnabled(false);
+//        imageDB.setExtractFeature(true);
+//        imageDB.setExtractColor(true);
+//        imageDB.setExtractingText(true);
 		bothJTB.addItemListener(new ItemListener() {
 
 			@Override
@@ -264,7 +264,8 @@ public class SearchUI extends JFrame{
 				query.setImageDatabase(imageDB);
 				query.initialize();
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
-				refreshImages();
+				repaint();
+//				refreshImages();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}

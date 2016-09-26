@@ -296,7 +296,7 @@ public class SearchUI extends JFrame{
 				query.setImageDatabase(imageDB);
 				query.initialize();
 				browseImg = browseImg.getScaledInstance(imageWidth, -1, browseImg.SCALE_DEFAULT);
-				//refreshImages();
+				refreshImages();
 	            revalidate();
 	            repaint();   
 			} catch (IOException e1) {

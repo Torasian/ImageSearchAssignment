@@ -216,6 +216,9 @@ public class ImageBean {
                 count ++;
             }
         }
+        if (similarity == 0) {
+            return 0;
+        }
         double similarity_new = similarity/count;
         return similarity_new;
     }
@@ -264,6 +267,9 @@ public class ImageBean {
              currentSquared += currentVector.get(i) * currentVector.get(i) *1.0;
         }
         bottomHalf = Math.sqrt(querySquared * currentSquared);
+        if (bottomHalf == 0) {
+            return 0;
+        }
         similarity = topHalf/bottomHalf;
         return similarity;
     }
